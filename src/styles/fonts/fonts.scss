@@ -1,0 +1,41 @@
+$font-family:'Philosopher Regular';
+$title-font-family:'Beleren';
+$small-caps-font-family:'Beleren SmallCaps';
+
+* {
+  font-family: $font-family, sans-serif !important;
+}
+
+h1, h2, h3, h4, h5, h6, button, .beleren {
+  font-family: $title-font-family, sans-serif !important;
+}
+
+.beleren-small-caps {
+  font-family: $small-caps-font-family, sans-serif !important;
+}
+
+
+
+@font-face {
+  font-family: 'Beleren';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Beleren2016-Bold'),
+    url('/src/styles/fonts/Beleren2016-Bold.ttf');
+}
+
+@font-face {
+  font-family: 'Beleren SmallCaps';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Beleren2016SmallCaps-Bold'),
+    url('/src/styles/fonts/Beleren2016SmallCaps-Bold.ttf');
+}
+
+@font-face {
+  font-family: 'Philosopher Regular';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Philosopher Regular'),
+    url('/src/styles/fonts/Philosopher-Regular.ttf');
+}

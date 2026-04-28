@@ -1,0 +1,31 @@
+{
+  "loading": {
+    "loading": "Chargement...",
+    "click": "Cliquez pour continuer"
+  },
+  "title": {
+    "options": {
+      "achievements": "Succès",
+      "codex": "Codex",
+      "play": "Jouer",
+      "load": "Charger",
+      "settings": "Options"
+    }
+  },
+  "creatures": {
+    "name": {
+      "llanowar-elves": "Elfes de Llanowar",
+      "skirk-prospector": "Propecteur skirkien"
+    }
+  },
+  "artifacts": {
+    "name": {
+      "adaptive-omnitool": "Outil universel évolutif"
+    }
+  },
+  "planes": {
+    "name": {
+      "dominaria": "Dominaria"
+    }
+  }
+}

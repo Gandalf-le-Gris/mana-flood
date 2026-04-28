@@ -1,0 +1,79 @@
+@use 'vuetify/settings' with (
+  $color-pack: true,
+  $utilities: false,
+);
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  transform-origin: top left;
+  
+  -moz-user-select: none !important;
+  -webkit-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+
+img {
+  pointer-events: none;
+}
+
+#app {
+  margin: 0;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  position: absolute;
+  transform-origin: top left;
+}
+
+.v-tooltip, .v-menu {
+  & > .v-overlay__content > * {
+    zoom: var(--v-tooltip-scaling);
+  }
+}
+
+@media only screen and (max-width: 1280px) {
+  .v-tooltip__content {
+    padding: 3px 8px;
+  }
+}
+
+.v-overlay {
+  max-width: calc(1920px * var(--v-tooltip-scaling));
+  max-height: calc(1080px * var(--v-tooltip-scaling));
+  margin: auto !important;
+}
+
+.v-dialog > .v-overlay__content, .v-overlay__scrim {
+  zoom: var(--v-tooltip-scaling);
+  max-width: 1920px;
+  max-height: 1080px;
+}
+
+.v-overlay__scrim {
+  position: absolute !important;
+}
+
+.v-application__wrap {
+  min-height: unset !important;
+}
+
+button {
+	background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+}
+
+img.icon {
+  height: .9em;
+  margin: 0 2px -4px 4px;
+}

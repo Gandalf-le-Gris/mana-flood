@@ -1,0 +1,7 @@
+@layer vuetify-core.reset, vuetify-bugfix;
+
+@layer vuetify-bugfix {
+  .v-progress-linear--striped > .v-progress-linear__background {
+    background-repeat: repeat !important;
+  }
+}
