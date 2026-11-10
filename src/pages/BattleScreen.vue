@@ -37,7 +37,7 @@ import { computed, ref } from 'vue';
 const battleInfo = ref<InstanceType<typeof BattleInfo> | null>(null);
 
 const game = computed<Game>(() => useGameStore().current!);
-const shopOpen = ref<boolean>(true);
+const shopOpen = ref<boolean>(false);
 
 const backgroundImage = computed(() => `url(/planes/${buildPlane(game.value.plane).name}.jpg)`);
 

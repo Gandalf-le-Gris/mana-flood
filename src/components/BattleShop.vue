@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="wrapper">
-
+      <v-row>
+        
+      </v-row>
     </div>
   </div>
 </template>
