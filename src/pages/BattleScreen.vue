@@ -19,7 +19,7 @@
     <battle-shop
       class="shop"
       :class="{hidden: !shopOpen}"
-      @close="shopOpen = false"
+      @close="commitFloor"
     />
     <icon-button
       icon="mdi-account-multiple"
@@ -72,6 +72,12 @@ function turnEnd() {
 
 function openShop() {
   shopOpen.value = true;
+}
+
+function commitFloor() {
+  shopOpen.value = false;
+  GameUtils.nextFloor(game.value);
+  useGameStore().saveGame();
 }
 </script>
 

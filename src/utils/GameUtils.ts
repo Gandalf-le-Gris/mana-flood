@@ -21,12 +21,9 @@ export class GameUtils {
     game.currentEnemies = Array.from(
       { length: 1 + Number(game.floor % 10 > 3) + Number(game.floor % 10 > 6) },
       () => CreatureUtils.getRandomCreature(game.plane),
-    )
-  }
-
-  static nextShop(game: Game) {
+    );
     game.shopContent = ShopUtils.getShop(game);
-    this.nextFloor(game);
+    game.hp = Math.min(game.hp, GameUtils.getTotalHp(game));
   }
 
   static getTotalHp(game: Game) {

@@ -142,6 +142,7 @@ function insertArtifact(index: number) {
 
 function swapTeam(i: number, j: number) {
   swap(game.team, i, j);
+  swap(game.artifacts, i, j);
 }
 </script>
 

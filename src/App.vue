@@ -17,8 +17,8 @@ import { ScreenTransition } from './utils/ScreenTransition';
 const SCREEN_WIDTH: number = 1920;
 const SCREEN_HEIGHT: number = 1080;
 
-// const currentScreen: Ref<string> = ref('LoadingScreen');
-const currentScreen: Ref<string> = ref('BattleScreen');
+const currentScreen: Ref<string> = ref('LoadingScreen');
+// const currentScreen: Ref<string> = ref('BattleScreen');
 // const currentScreen: Ref<string> = ref('Test');
 
 onMounted(() => {

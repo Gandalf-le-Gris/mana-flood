@@ -56,7 +56,6 @@ function targetEnemy(index: number) {
 async function checkForVictory() {
   if (!enemies.value.some(e => e.hp > 0)) {
     await sleep(1000);
-    GameUtils.nextShop(game);
     emit('battle-end');
     await sleep(1000);
     rebuildEnemies();
