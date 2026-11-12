@@ -40,5 +40,11 @@
     "name": {
       "dominaria": "Dominaria"
     }
+  },
+  "effects": {
+    "enemy": {
+      "skirk-prospector": "Augmente la fréquence des orbes rouges.",
+      "llanowar-elves": "Augmente la fréquence des orbes verts."
+    }
   }
 }

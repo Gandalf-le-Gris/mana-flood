@@ -131,12 +131,16 @@ function refillBoard() {
     for (let r = 0; r < rows.value; r++) {
       const idx = r * cols.value + c;
       if (!newOrbs.find(o => o.c === c && o.r === r)) {
-        const orb = new Orb(choice(extendedColors), r, c);
+        const orb = new Orb(getNextColor(), r, c);
         newOrbs.splice(idx, 0, orb);
       }
     }
   }
   orbs.value = newOrbs;
+}
+
+function getNextColor(): ExtendedColor {
+  return choice(extendedColors);
 }
 
 interface Coord { r: number; c: number }
