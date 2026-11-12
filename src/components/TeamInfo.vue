@@ -50,19 +50,20 @@ function takeDamage(damage: number) {
   CreatureUtils.visualDamage(damage, 'C', healthBar.value?.$el);
 }
 
-defineExpose({ takeDamage });
+function heal(amount: number) {
+  if (amount > 0) {
+    game.hp += amount;
+    CreatureUtils.visualDamage(amount, 'G', healthBar.value?.$el);
+  }
+}
+
+defineExpose({ takeDamage, heal });
 </script>
 
 <style lang="scss" scoped>
 .health-bar {
   width: -webkit-fit-content;
   margin: 0 auto 32px;
-}
-
-.team {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
 }
 
 .team {

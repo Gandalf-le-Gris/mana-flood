@@ -3,6 +3,7 @@ import type { Game } from "@/types/Game";
 import { CreatureUtils } from "./CreatureUtils";
 import type { ExtendedColor } from "@/types/Color";
 import { Creature } from "@/types/creatures/Creature";
+import { ShopUtils } from './ShopUtils';
 
 interface MatchGroup {
   color: ExtendedColor;
@@ -24,6 +25,7 @@ export class GameUtils {
   }
 
   static nextShop(game: Game) {
+    game.shopContent = ShopUtils.getShop(game);
     this.nextFloor(game);
   }
 

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="ma-auto">
     <div class="frame">
       <v-img
         v-if="character"
@@ -24,10 +24,11 @@ import { computed } from 'vue';
 
 const props = defineProps<{
   character: Creature | null,
+  size?: number,
 }>();
 
-const width = computed(() => '150px');
-const height = computed(() => '150px');
+const width = computed(() => `${props.size ?? 150}px`);
+const height = computed(() => `${props.size ?? 150}px`);
 const frameColor = computed(() => `rgb(var(--v-theme-${props.character?.colors[0] ?? 'C'}))`)
 </script>
 

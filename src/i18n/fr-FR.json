@@ -12,13 +12,26 @@
       "settings": "Options"
     }
   },
+  "shop": {
+    "title": "Choisissez une récompense",
+    "heal": {
+      "title": "Soin",
+      "amount": "Récupérez {0}% PV"
+    }
+  },
+  "team": {
+    "title": "Mon équipe",
+    "new": "Nouvelle carte"
+  },
   "creatures": {
+    "one": "Créature",
     "name": {
       "llanowar-elves": "Elfes de Llanowar",
-      "skirk-prospector": "Propecteur skirkien"
+      "skirk-prospector": "Prospecteur skirkien"
     }
   },
   "artifacts": {
+    "one": "Artefact",
     "name": {
       "adaptive-omnitool": "Outil universel évolutif"
     }

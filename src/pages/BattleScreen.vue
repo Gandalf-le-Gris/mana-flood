@@ -19,7 +19,17 @@
     <battle-shop
       class="shop"
       :class="{hidden: !shopOpen}"
+      @close="shopOpen = false"
     />
+    <icon-button
+      icon="mdi-account-multiple"
+      size="80"
+      variant="hexa"
+      class="team-button"
+      :class="{hidden: !shopOpen}"
+      @click="teamOpen = true"
+    />
+    <team-detail-dialog v-model="teamOpen" />
   </div>
 </template>
 
@@ -33,11 +43,14 @@ import { Game } from '@/types/Game';
 import { buildPlane } from '@/types/planes/planes';
 import { GameUtils } from '@/utils/GameUtils';
 import { computed, ref } from 'vue';
+import TeamDetailDialog from '@/components/TeamDetailDialog.vue';
+import IconButton from '@/components/IconButton.vue';
 
 const battleInfo = ref<InstanceType<typeof BattleInfo> | null>(null);
 
 const game = computed<Game>(() => useGameStore().current!);
 const shopOpen = ref<boolean>(false);
+const teamOpen = ref<boolean>(false);
 
 const backgroundImage = computed(() => `url(/planes/${buildPlane(game.value.plane).name}.jpg)`);
 
@@ -120,6 +133,17 @@ function openShop() {
 
   &.hidden {
     top: -100%;
+  }
+}
+
+.team-button {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  transition: bottom 1s ease-in-out;
+
+  &.hidden {
+    bottom: -10%;
   }
 }
 </style>

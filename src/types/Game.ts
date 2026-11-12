@@ -1,5 +1,3 @@
-
-
 export interface ShopContent {
   creature?: string,
   artifact?: string,

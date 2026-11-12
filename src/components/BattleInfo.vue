@@ -31,8 +31,8 @@ import { buildCreature } from '@/types/creatures/creatures';
 import type { Game } from '@/types/Game';
 import { CreatureUtils } from '@/utils/CreatureUtils';
 import { GameUtils } from '@/utils/GameUtils';
+import { sleep } from '@/utils/TsUtils.ts';
 import { onMounted, ref } from 'vue';
-import { computed } from 'vue';
 
 const game: Game = useGameStore().current!;
 
@@ -53,10 +53,12 @@ function targetEnemy(index: number) {
   }
 }
 
-function checkForVictory() {
+async function checkForVictory() {
   if (!enemies.value.some(e => e.hp > 0)) {
+    await sleep(1000);
     GameUtils.nextShop(game);
     emit('battle-end');
+    await sleep(1000);
     rebuildEnemies();
   }
 }

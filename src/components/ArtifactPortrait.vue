@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="ma-auto">
     <div class="frame">
       <v-img
         v-if="artifact"
@@ -24,10 +24,11 @@ import { computed } from 'vue';
 
 const props = defineProps<{
   artifact: Artifact | null,
+  size?: number,
 }>();
 
-const width = computed(() => '110px');
-const height = computed(() => '110px');
+const width = computed(() => `${props.size ?? 110}px`);
+const height = computed(() => `${props.size ?? 110}px`);
 const frameColor = computed(() => `rgb(var(--v-theme-${props.artifact?.colors[0] ?? 'C'}))`)
 </script>
 

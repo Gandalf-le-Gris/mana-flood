@@ -22,3 +22,12 @@ export function shuffle<T>(array: T[]): T[] {
   }
   return array;
 }
+
+export function swap<T>(array: T[], i: number, j: number) {
+  if (i === j) {
+    return;
+  }
+  const [a, b] = [i < j ? i : j, i < j ? j : i];
+  const [t]: T[] = array.splice(a, 1, array[b]);
+  array.splice(b, 1, t);
+}
