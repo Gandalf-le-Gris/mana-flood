@@ -1,4 +1,6 @@
 import type { Color } from "../Color";
+import { conversionEffects } from '../effects/activated/ConversionEffects';
+import { affinityEffects } from '../effects/AffinityEffects';
 import { Creature, Rarity } from "./Creature";
 
 export class LlanowarElves extends Creature {
@@ -21,4 +23,7 @@ export class LlanowarElves extends Creature {
   pool = {
     'dominaria': Rarity.COMMON,
   };
+
+  enemyEffects = [affinityEffects.greenAffinity];
+  activatedAbility = conversionEffects.minorGreenConversion;
 }

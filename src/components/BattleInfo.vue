@@ -31,12 +31,11 @@ import { buildCreature } from '@/types/creatures/creatures';
 import type { Game } from '@/types/Game';
 import { CreatureUtils } from '@/utils/CreatureUtils';
 import { GameUtils } from '@/utils/GameUtils';
-import { sleep } from '@/utils/TsUtils.ts';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 
 const game: Game = useGameStore().current!;
 
-const emit = defineEmits(['battle-end']);
+const emit = defineEmits(['battle-end', 'check-victory']);
 
 const enemies = ref<Creature[]>([]);
 const enemiesRefs = ref<InstanceType<typeof EnemyFrame>[]>([]);
@@ -53,35 +52,58 @@ function targetEnemy(index: number) {
   }
 }
 
-async function checkForVictory() {
-  if (!enemies.value.some(e => e.hp > 0)) {
-    await sleep(1000);
-    emit('battle-end');
-    await sleep(1000);
-    rebuildEnemies();
+function areAllEnemiesDead(): boolean {
+  return enemies.value.length > 0 && !enemies.value.some(e => e.hp > 0);
+}
+
+function hasAliveEnemies(): boolean {
+  return enemies.value.some(e => e.hp > 0);
+}
+
+function checkEnemiesStatus() {
+  if (areAllEnemiesDead()) {
+    emit('check-victory');
   }
 }
 
-function dealDamageToEnemy(damage: number, color: ExtendedColor) {
+function dealDamageToEnemy(damage: number, color: ExtendedColor, targetIndex?: number) {
   if (damage > 0) {
-    const target: number = priorities.value.length
-      ? priorities.value[0]
-      : enemies.value.findIndex(c => c.hp > 0);
-    if (target !== -1) {
-      CreatureUtils.visualDamage(damage, color, enemiesRefs.value[target].$el);
+    const target: number = targetIndex !== undefined
+      ? targetIndex
+      : (priorities.value.length ? priorities.value[0] : enemies.value.findIndex(c => c.hp > 0));
+    if (target !== -1 && enemies.value[target] && enemies.value[target].hp > 0) {
+      CreatureUtils.visualDamage(damage, color, enemiesRefs.value[target]?.$el);
       enemies.value[target].hp = Math.max(0, enemies.value[target].hp - damage);
       if (enemies.value[target].hp <= 0) {
         const i = priorities.value.indexOf(target);
         if (i !== -1) {
           priorities.value.splice(i, 1);
         }
-        checkForVictory();
+        game.currentEnemies.splice(game.currentEnemies.indexOf(enemies.value[target].name), 1);
+        checkEnemiesStatus();
       }
     }
   }
 }
 
+function dealDamageToAllEnemies(damage: number, color: ExtendedColor) {
+  for (let i = 0; i < enemies.value.length; i++) {
+    if (enemies.value[i].hp > 0) {
+      dealDamageToEnemy(damage, color, i);
+    }
+  }
+}
+
+function healTeam(amount: number) {
+  teamInfo.value?.heal(amount);
+}
+
+function damageTeam(amount: number) {
+  teamInfo.value?.takeDamage(amount);
+}
+
 function enemyTurn() {
+  teamInfo.value?.onTurnEnd();
   for (const enemy of enemies.value) {
     if (enemy.hp > 0) {
       enemy.timer--;
@@ -93,7 +115,16 @@ function enemyTurn() {
   }
 }
 
-defineExpose({ dealDamageToEnemy, enemyTurn });
+defineExpose({
+  dealDamageToEnemy,
+  dealDamageToAllEnemies,
+  healTeam,
+  damageTeam,
+  enemyTurn,
+  teamInfo,
+  areAllEnemiesDead,
+  hasAliveEnemies,
+});
 
 function rebuildEnemies() {
   enemies.value = game.currentEnemies.map(e => buildCreature(e));
@@ -106,6 +137,8 @@ function rebuildEnemies() {
 onMounted(() => {
   rebuildEnemies();
 });
+
+watch(() => game.floor, rebuildEnemies);
 </script>
 
 <style lang="scss" scoped>

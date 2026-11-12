@@ -8,13 +8,16 @@
       ref="battleInfo"
       class="battle-info"
       :class="{hidden: shopOpen}"
+      @check-victory="checkBattleEnd"
       @battle-end="openShop"
     />
     <mana-board
+      ref="manaBoard"
       class="mana-board"
       :class="{hidden: shopOpen}"
+      :disabled="isBattleEnding"
       @match="processMatch"
-      @turn-end="turnEnd"
+      @turn-end="onTurnEnd"
     />
     <battle-shop
       class="shop"
@@ -42,11 +45,60 @@ import type { ExtendedColor } from '@/types/Color';
 import { Game } from '@/types/Game';
 import { buildPlane } from '@/types/planes/planes';
 import { GameUtils } from '@/utils/GameUtils';
-import { computed, ref } from 'vue';
+import { computed, provide, ref } from 'vue';
 import TeamDetailDialog from '@/components/TeamDetailDialog.vue';
 import IconButton from '@/components/IconButton.vue';
+import type { BattleContext } from '@/types/BattleContext';
+import { sleep } from '@/utils/TsUtils';
 
 const battleInfo = ref<InstanceType<typeof BattleInfo> | null>(null);
+const manaBoard = ref<InstanceType<typeof ManaBoard> | null>(null);
+const isBattleEnding = ref<boolean>(false);
+
+async function checkBattleEnd() {
+  if (isBattleEnding.value) return;
+  if (!battleInfo.value) return;
+
+  const allEnemiesDead = battleInfo.value.areAllEnemiesDead();
+  const boardBusy = manaBoard.value?.isBusy() ?? false;
+
+  if (allEnemiesDead && !boardBusy) {
+    isBattleEnding.value = true;
+    await sleep(1000);
+    openShop();
+  }
+}
+
+const battleContext: BattleContext = {
+  healTeam(amount: number) {
+    battleInfo.value?.healTeam(amount);
+  },
+  damageTeam(amount: number) {
+    battleInfo.value?.damageTeam(amount);
+  },
+  damageEnemy(damage: number, color: ExtendedColor = 'C', targetIndex?: number) {
+    battleInfo.value?.dealDamageToEnemy(damage, color, targetIndex);
+  },
+  damageAllEnemies(damage: number, color: ExtendedColor = 'C') {
+    battleInfo.value?.dealDamageToAllEnemies(damage, color);
+  },
+  convertOrbs(count: number, toColor: ExtendedColor, fromColor?: ExtendedColor) {
+    if (manaBoard.value?.isBusy() || isBattleEnding.value) return false;
+    return manaBoard.value?.convertOrbs(count, toColor, fromColor) ?? false;
+  },
+  destroyOrbs(_count: number, _color?: ExtendedColor) {
+    return false;
+  },
+  shuffleBoard() {
+    if (manaBoard.value?.isBusy() || isBattleEnding.value) return false;
+    return manaBoard.value?.shuffleBoard() ?? false;
+  },
+  canAct() {
+    return !(manaBoard.value?.isBusy() || isBattleEnding.value);
+  }
+};
+
+provide('battleContext', battleContext);
 
 const game = computed<Game>(() => useGameStore().current!);
 const shopOpen = ref<boolean>(false);
@@ -66,7 +118,11 @@ function processMatch(matches: MatchGroup[]) {
   }
 }
 
-function turnEnd() {
+function onTurnEnd() {
+  if (battleInfo.value?.areAllEnemiesDead()) {
+    checkBattleEnd();
+    return;
+  }
   battleInfo.value?.enemyTurn();
 }
 
@@ -76,6 +132,7 @@ function openShop() {
 
 function commitFloor() {
   shopOpen.value = false;
+  isBattleEnding.value = false;
   GameUtils.nextFloor(game.value);
   useGameStore().saveGame();
 }

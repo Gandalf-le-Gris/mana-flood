@@ -1,4 +1,6 @@
 import type { Color, ExtendedColor } from "../Color";
+import type { Effect } from '../effects/Effect';
+import type { ActivatedEffect } from '../effects/activated/ActivatedEffect';
 
 export class Rarity {
   static COMMON: number = 20;
@@ -30,4 +32,8 @@ export class Creature {
   }
 
   pool: Record<string, number> = {};
+
+  enemyEffects: Effect[] = [];
+  teamEffects: Effect[] = [];
+  activatedAbility?: ActivatedEffect;
 }
