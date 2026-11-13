@@ -14,7 +14,7 @@ class AffinityEffect extends Effect {
   constructor(color: ExtendedColor, affinity: Affinity) {
     super();
     this.orbRateModifier = Object.fromEntries([[color, affinity.value]]);
-    this.id = `${getColorName(color)}-${affinity.name}`;
+    this.id = `shared.${getColorName(color)}-${affinity.name}`;
   }
 }
 

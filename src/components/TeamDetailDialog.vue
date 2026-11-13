@@ -5,7 +5,7 @@
   >
     <div class="wrapper">
       <div class="d-flex position-relative">
-        <h1 class="my-2 text-center w-100">{{ $t('team.title') }}</h1>
+        <h1 class="my-2 text-center w-100 beleren-small-caps">{{ $t('team.title') }}</h1>
         <icon-button
           icon="mdi-close"
           size="48"

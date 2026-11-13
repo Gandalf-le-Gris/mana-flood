@@ -3,6 +3,7 @@
     <div
       class="frame"
       :class="{ 'has-halo': ready, 'on-cooldown': isOnCooldown }"
+      @click.right="showDetail = true"
     >
       <v-img
         v-if="character"
@@ -17,8 +18,6 @@
         v-else
         class="masked background"
       ></div>
-
-      <!-- Badge de cooldown dans le coin inférieur droit -->
       <div
         v-if="isOnCooldown"
         class="cooldown-corner-badge"
@@ -31,12 +30,18 @@
         <span>{{ cooldown }}</span>
       </div>
     </div>
+    <character-detail-dialog
+      v-if="character"
+      v-model="showDetail"
+      :character
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import type { Creature } from '@/types/creatures/Creature';
-import { computed } from 'vue';
+import { computed, ref, type Ref } from 'vue';
+import CharacterDetailDialog from './CharacterDetailDialog.vue';
 
 const props = withDefaults(defineProps<{
   character: Creature | null,
@@ -48,6 +53,8 @@ const props = withDefaults(defineProps<{
   cooldown: undefined,
   isReady: false,
 });
+
+const showDetail: Ref<boolean> = ref(false);
 
 const width = computed(() => `${props.size}px`);
 const height = computed(() => `${props.size}px`);

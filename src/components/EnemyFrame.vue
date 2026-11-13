@@ -3,6 +3,7 @@
     <div
       class="frame"
       :class="{dead: enemy.hp <= 0}"
+      @click.right="showDetail = true"
     >
       <v-img
         :width
@@ -18,24 +19,24 @@
       <div class="text">
         <h2 class="beleren-small-caps text-center">{{ $t(`creatures.name.${enemy.name}`) }}</h2>
         <div class="d-flex justify-space-between mx-5 mt-n6">
-            <h2 class="d-flex">
-              {{ enemy.damageModifier * Creature.baseDamage }}
-              <v-icon
-                icon="mdi-sword"
-                size="xs"
-                class="mt-1 ml-1"
-                color="orange-lighten-1"
-              />
-            </h2>
-            <h2 class="d-flex">
-              {{ enemy.hp }}
-              <v-icon
-                icon="mdi-heart"
-                size="xs"
-                class="mt-1 ml-1"
-                color="pink-lighten-1"
-              />
-            </h2>
+          <h2 class="d-flex">
+            {{ enemy.damageModifier * Creature.baseDamage }}
+            <v-icon
+              icon="mdi-sword"
+              size="xs"
+              class="mt-1 ml-1"
+              color="orange-lighten-1"
+            />
+          </h2>
+          <h2 class="d-flex">
+            {{ enemy.hp }}
+            <v-icon
+              icon="mdi-heart"
+              size="xs"
+              class="mt-1 ml-1"
+              color="pink-lighten-1"
+            />
+          </h2>
         </div>
       </div>
       <div
@@ -50,17 +51,26 @@
         <span class="beleren">{{ priority + 1 }}</span>
       </div>
     </div>
+    <character-detail-dialog
+      v-model="showDetail"
+      :character="enemy"
+      :damage="enemy.damageModifier * Creature.baseDamage"
+      enemy
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { Creature } from '@/types/creatures/Creature';
-import { computed } from 'vue';
+import { computed, ref, type Ref } from 'vue';
+import CharacterDetailDialog from './CharacterDetailDialog.vue';
 
 const props = defineProps<{
   enemy: Creature,
   priority: number,
 }>();
+
+const showDetail: Ref<boolean> = ref(false);
 
 const width = computed(() => '250px');
 const height = computed(() => '370px');

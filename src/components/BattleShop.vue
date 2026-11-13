@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="wrapper">
-      <h1 class="text-center">
+      <h1 class="text-center beleren-small-caps">
         {{ $t('shop.title') }}
       </h1>
       <v-row class="ma-6 shop-content">
