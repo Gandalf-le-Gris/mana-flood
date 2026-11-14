@@ -5,7 +5,7 @@
   >
     <div class="wrapper">
       <div class="d-flex position-relative">
-        <h1 class="my-2 text-center w-100">{{ $t('team.title') }}</h1>
+        <h1 class="my-2 text-center w-100 beleren-small-caps">{{ $t('team.title') }}</h1>
         <icon-button
           icon="mdi-close"
           size="48"
@@ -28,7 +28,11 @@
               @click="insertCreature(index)"
               :class="{ 'hover-scale': creature }"
             >
-              <character-portrait :character="c" :size="180" />
+              <character-portrait
+                :character="c"
+                :size="180"
+                :cooldown="game.cooldowns?.[index]"
+              />
             </div>
           </div>
           <div class="team artifacts">
@@ -129,6 +133,9 @@ const artifacts = computed<(Artifact | null)[]>(() => game.artifacts.map(c => c 
 function insertCreature(index: number) {
   if (props.creature) {
     game.team.splice(index, 1, props.creature.name);
+    if (game.cooldowns) {
+      game.cooldowns[index] = 0;
+    }
     emits('edited');
   }
 }
@@ -143,6 +150,9 @@ function insertArtifact(index: number) {
 function swapTeam(i: number, j: number) {
   swap(game.team, i, j);
   swap(game.artifacts, i, j);
+  if (game.cooldowns) {
+    swap(game.cooldowns, i, j);
+  }
 }
 </script>
 

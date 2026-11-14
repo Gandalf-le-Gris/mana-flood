@@ -4,7 +4,6 @@ import { ArtifactUtils } from "./ArtifactUtils";
 
 export class ShopUtils {
   static getShop(game: Game): ShopContent {
-    console.log(game.currentEnemies, game.plane);
     const shopContent: ShopContent = {};
     // if (Math.random() < .5) {
       shopContent.creature = choice(game.currentEnemies);

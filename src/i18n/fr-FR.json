@@ -42,9 +42,74 @@
     }
   },
   "effects": {
+    "title": "Pouvoir passif",
+    "none": "Aucun",
+    "shared": {
+      "white-affinity": "Augmente la fréquence des orbes blancs.",
+      "blue-affinity": "Augmente la fréquence des orbes bleus.",
+      "black-affinity": "Augmente la fréquence des orbes noirs.",
+      "red-affinity": "Augmente la fréquence des orbes rouges.",
+      "green-affinity": "Augmente la fréquence des orbes verts.",
+      "colorless-affinity": "Augmente la fréquence des orbes incolores.",
+      "white-greater-affinity": "Augmente grandement la fréquence des orbes blancs.",
+      "blue-greater-affinity": "Augmente grandement la fréquence des orbes bleus.",
+      "black-greater-affinity": "Augmente grandement la fréquence des orbes noirs.",
+      "red-greater-affinity": "Augmente grandement la fréquence des orbes rouges.",
+      "green-greater-affinity": "Augmente grandement la fréquence des orbes verts.",
+      "colorless-greater-affinity": "Augmente grandement la fréquence des orbes incolores.",
+      "white-hatred": "Réduit la fréquence des orbes blancs.",
+      "blue-hatred": "Réduit la fréquence des orbes bleus.",
+      "black-hatred": "Réduit la fréquence des orbes noirs.",
+      "red-hatred": "Réduit la fréquence des orbes rouges.",
+      "green-hatred": "Réduit la fréquence des orbes verts.",
+      "colorless-hatred": "Réduit la fréquence des orbes incolores."
+    },
     "enemy": {
-      "skirk-prospector": "Augmente la fréquence des orbes rouges.",
-      "llanowar-elves": "Augmente la fréquence des orbes verts."
+      
+    }
+  },
+  "abilities": {
+    "name": {
+      "minor-convert-white": "Conversion mineure : blanc",
+      "minor-convert-blue": "Conversion mineure : bleu",
+      "minor-convert-black": "Conversion mineure : noir",
+      "minor-convert-red": "Conversion mineure : rouge",
+      "minor-convert-green": "Conversion mineure : vert",
+      "minor-convert-colorless": "Conversion mineure : incolore",
+      "convert-white": "Conversion : blanc",
+      "convert-blue": "Conversion : bleu",
+      "convert-black": "Conversion : noir",
+      "convert-red": "Conversion : rouge",
+      "convert-green": "Conversion : vert",
+      "convert-colorless": "Conversion : incolore",
+      "major-convert-white": "Conversion majeure : blanc",
+      "major-convert-blue": "Conversion majeure : bleu",
+      "major-convert-black": "Conversion majeure : noir",
+      "major-convert-red": "Conversion majeure : rouge",
+      "major-convert-green": "Conversion majeure : vert",
+      "major-convert-colorless": "Conversion majeure : incolore",
+      "skirk-sacrifice": "Ferveur gobeline"
+    },
+    "description": {
+      "minor-convert-white": "Convertit 3 orbes aléatoires en orbes blancs.",
+      "minor-convert-blue": "Convertit 3 orbes aléatoires en orbes bleus.",
+      "minor-convert-black": "Convertit 3 orbes aléatoires en orbes noirs.",
+      "minor-convert-red": "Convertit 3 orbes aléatoires en orbes rouges.",
+      "minor-convert-green": "Convertit 3 orbes aléatoires en orbes verts.",
+      "minor-convert-colorless": "Convertit 3 orbes aléatoires en orbes incolores.",
+      "convert-white": "Convertit 6 orbes aléatoires en orbes blancs.",
+      "convert-blue": "Convertit 6 orbes aléatoires en orbes bleus.",
+      "convert-black": "Convertit 6 orbes aléatoires en orbes noirs.",
+      "convert-red": "Convertit 6 orbes aléatoires en orbes rouges.",
+      "convert-green": "Convertit 6 orbes aléatoires en orbes verts.",
+      "convert-colorless": "Convertit 6 orbes aléatoires en orbes incolores.",
+      "major-convert-white": "Convertit 12 orbes aléatoires en orbes blancs.",
+      "major-convert-blue": "Convertit 12 orbes aléatoires en orbes bleus.",
+      "major-convert-black": "Convertit 12 orbes aléatoires en orbes noirs.",
+      "major-convert-red": "Convertit 12 orbes aléatoires en orbes rouges.",
+      "major-convert-green": "Convertit 12 orbes aléatoires en orbes verts.",
+      "major-convert-colorless": "Convertit 12 orbes aléatoires en orbes incolores.",
+      "skirk-sacrifice": "Sacrifie 30 PV de l'équipe pour infliger 150 dégâts de feu à tous les ennemis. Cooldown : 2 tours."
     }
   }
 }

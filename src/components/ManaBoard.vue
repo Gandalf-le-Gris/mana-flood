@@ -37,8 +37,16 @@ import { choice } from '@/utils/ArrayUtils';
 import { useGameStore } from '@/stores/gameStore';
 import { GameUtils } from '@/utils/GameUtils';
 import { Game } from '@/types/Game';
+import type { Effect } from '@/types/effects/Effect.ts';
+import { buildCreature } from '@/types/creatures/creatures.ts';
 
 const emit = defineEmits(['match', 'turn-end']);
+
+const props = withDefaults(defineProps<{
+  disabled?: boolean;
+}>(), {
+  disabled: false,
+});
 
 const rows = ref(5);
 const cols = ref(6);
@@ -66,7 +74,7 @@ const getOrbStyle = (orb: Orb) => {
   return {
     zIndex: isHeld ? 1000 : orb.r + 10,
     pointerEvents: isHeld ? 'none' : 'auto',
-    cursor: isProcessing.value ? 'not-allowed' : 'grab'
+    cursor: isProcessing.value || props.disabled ? 'not-allowed' : 'grab'
   };
 };
 
@@ -86,14 +94,13 @@ function initOrbs() {
 }
 
 async function processMatches() {
+  isProcessing.value = true;
   const matches = findMatches();
   if (!matches.length) {
     isProcessing.value = false;
     emit('turn-end');
     return;
   }
-
-  isProcessing.value = true;
 
   const coordsToRemove = new Set(
     matches.flatMap(g => g.coords.map(c => `${c.r},${c.c}`))
@@ -102,9 +109,9 @@ async function processMatches() {
 
   await delay(400);
 
+  emit('match', matches);
   collapseColumns();
   refillBoard();
-  emit('match', matches);
   await delay(500);
 
   await processMatches();
@@ -126,12 +133,35 @@ function collapseColumns() {
 }
 
 function refillBoard() {
+  const activeEffects: Effect[] = game.value.currentEnemies.flatMap(e => buildCreature(e).enemyEffects)
+    .concat(game.value.team.flatMap(c => c ? buildCreature(c).teamEffects : []));
+  const weights: Record<ExtendedColor, number> = {
+    W: 1,
+    U: 1,
+    B: 1,
+    R: 1,
+    G: 1,
+    C: 1,
+  };
+  for (const effect of activeEffects) {
+    if (effect.orbRateModifier) {
+      Object.entries(effect.orbRateModifier).forEach(([c, v]) => {
+        const color = c as ExtendedColor;
+        if (weights[color] !== undefined) {
+          weights[color] = Math.max(0, weights[color] + v);
+        }
+      });
+    }
+  }
+  const weightedArray: [ExtendedColor, number][] = Object.entries(weights) as [ExtendedColor, number][];
+  const totalWeight: number = weightedArray.reduce((acc, [_, x]) => acc + x, 0);
+
   const newOrbs = [...orbs.value];
   for (let c = 0; c < cols.value; c++) {
     for (let r = 0; r < rows.value; r++) {
       const idx = r * cols.value + c;
       if (!newOrbs.find(o => o.c === c && o.r === r)) {
-        const orb = new Orb(getNextColor(), r, c);
+        const orb = new Orb(getNextColor(weightedArray, totalWeight), r, c);
         newOrbs.splice(idx, 0, orb);
       }
     }
@@ -139,8 +169,19 @@ function refillBoard() {
   orbs.value = newOrbs;
 }
 
-function getNextColor(): ExtendedColor {
-  return choice(extendedColors);
+function getNextColor(weightedArray: [ExtendedColor, number][], totalWeight: number): ExtendedColor {
+  if (totalWeight <= 0) {
+    return choice(extendedColors);
+  }
+  let target = Math.random() * totalWeight;
+  for (const [color, weight] of weightedArray) {
+    if (weight <= 0) continue;
+    if (target < weight) {
+      return color;
+    }
+    target -= weight;
+  }
+  return weightedArray[weightedArray.length - 1]?.[0] ?? 'C';
 }
 
 interface Coord { r: number; c: number }
@@ -260,7 +301,7 @@ function shuffleOrbs() {
 const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
 function onMouseDown(e: MouseEvent, orb: Orb) {
-  if (isProcessing.value) return;
+  if (isProcessing.value || props.disabled) return;
 
   const boardElement = (e.currentTarget as HTMLElement).closest('.board') as HTMLElement;
   if (!boardElement) return;
@@ -327,6 +368,7 @@ function onMouseUp() {
   stopTimer();
 
   isDragging.value = false;
+  isProcessing.value = true;
   activeOrb.value = null;
   grabOffset.x + 0;
   grabOffset.y = 0;
@@ -358,6 +400,47 @@ function stopTimer() {
   timer.value = 0;
   clearInterval(timerTimeout.value);
 }
+
+function convertOrbs(count: number, toColor: ExtendedColor, fromColor?: ExtendedColor): boolean {
+  if (isProcessing.value || isDragging.value || props.disabled) return false;
+
+  const eligibleOrbs = orbs.value.filter(o => {
+    if (fromColor) {
+      return o.color === fromColor && o.color !== toColor;
+    }
+    return o.color !== toColor;
+  });
+
+  if (eligibleOrbs.length === 0) return false;
+
+  const shuffled = [...eligibleOrbs].sort(() => Math.random() - 0.5);
+  const selected = shuffled.slice(0, count);
+
+  for (const orb of selected) {
+    orb.color = toColor;
+  }
+
+  return true;
+}
+
+function shuffleBoard(): boolean {
+  if (isProcessing.value || isDragging.value || props.disabled) return false;
+  const colors = orbs.value.map(o => o.color).sort(() => Math.random() - 0.5);
+  orbs.value.forEach((orb, i) => {
+    orb.color = colors[i];
+  });
+  return true;
+}
+
+function isBusy(): boolean {
+  return isProcessing.value || isDragging.value;
+}
+
+defineExpose({
+  convertOrbs,
+  shuffleBoard,
+  isBusy,
+});
 
 onMounted(initOrbs);
 </script>

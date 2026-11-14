@@ -1,9 +1,5 @@
-import type { ExtendedColor } from "@/types/Color";
-import { EffectCondition } from "../EffectCondition";
+import { Effect } from '../Effect';
 
-export class EnemyEffect {
-  id: string = "";
-  condition: EffectCondition = EffectCondition.NONE;
+export class EnemyEffect extends Effect {
 
-  orbRateModifier?: Partial<Record<ExtendedColor, number>>;
 }
