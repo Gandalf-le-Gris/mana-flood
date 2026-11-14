@@ -62,7 +62,6 @@ const frameColor = computed(() => `rgb(var(--v-theme-${props.character?.colors[0
 
 const isOnCooldown = computed(() => (props.cooldown ?? 0) > 0);
 
-// Le halo de brillance ne s'applique que si isReady est explicitement vrai (interface de combat)
 const ready = computed(() => props.isReady === true);
 
 const badgeIconSize = computed(() => Math.max(16, Math.round(props.size * 0.13)));

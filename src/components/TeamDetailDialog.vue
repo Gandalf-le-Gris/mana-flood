@@ -42,7 +42,11 @@
               @click="insertArtifact(index)"
               :class="{ 'hover-scale': artifact }"
             >
-              <artifact-portrait :artifact="a" :size="130" />
+              <artifact-portrait
+                :artifact="a"
+                :size="130"
+                :cooldown="game.artifactCooldowns?.[index]"
+              />
             </div>
           </div>
           <div class="team mb-4">
@@ -143,6 +147,9 @@ function insertCreature(index: number) {
 function insertArtifact(index: number) {
   if (props.artifact) {
     game.artifacts.splice(index, 1, props.artifact.name);
+    if (game.artifactCooldowns) {
+      game.artifactCooldowns[index] = 0;
+    }
     emits('edited');
   }
 }
@@ -152,6 +159,9 @@ function swapTeam(i: number, j: number) {
   swap(game.artifacts, i, j);
   if (game.cooldowns) {
     swap(game.cooldowns, i, j);
+  }
+  if (game.artifactCooldowns) {
+    swap(game.artifactCooldowns, i, j);
   }
 }
 </script>

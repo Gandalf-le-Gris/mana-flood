@@ -1,4 +1,6 @@
 import type { Color } from "../Color";
+import type { ActivatedEffect } from "../effects/activated/ActivatedEffect";
+import type { Effect } from "../effects/Effect";
 
 export class Rarity {
   static COMMON: number = 20;
@@ -12,4 +14,7 @@ export class Artifact {
   colors: Color[] = [];
 
   pool: Record<string, number> = {};
+
+  teamEffects: Effect[] = [];
+  activatedAbility?: ActivatedEffect;
 }

@@ -12,6 +12,7 @@ export class Game {
   plane: string = 'dominaria';
   team: (string | null)[] = ['llanowar-elves', 'llanowar-elves', 'llanowar-elves', 'skirk-prospector', 'skirk-prospector'];
   cooldowns: number[] = [0, 0, 0, 0, 0];
+  artifactCooldowns: number[] = [0, 0, 0, 0, 0];
   artifacts: (string | null)[] = [null, null, null, null, null];
   currentEnemies: string[] = [];
   shopContent: ShopContent = {};

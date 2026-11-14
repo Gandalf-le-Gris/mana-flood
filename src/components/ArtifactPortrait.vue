@@ -1,6 +1,10 @@
 <template>
   <div class="ma-auto">
-    <div class="frame">
+    <div
+      class="frame"
+      :class="{ 'has-halo': ready, 'on-cooldown': isOnCooldown }"
+      @click.right="showDetail = true"
+    >
       <v-img
         v-if="artifact"
         :width
@@ -14,22 +18,55 @@
         v-else
         class="masked background"
       ></div>
+      <div
+        v-if="isOnCooldown"
+        class="cooldown-corner-badge"
+      >
+        <v-icon
+          icon="mdi-timer-sand"
+          :size="badgeIconSize"
+          class="mr-1"
+        />
+        <span>{{ cooldown }}</span>
+      </div>
     </div>
+    <artifact-detail-dialog
+      v-if="artifact"
+      v-model="showDetail"
+      :artifact
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import type { Artifact } from '@/types/artifacts/Artifact';
-import { computed } from 'vue';
+import { computed, ref, type Ref } from 'vue';
+import ArtifactDetailDialog from './ArtifactDetailDialog.vue';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   artifact: Artifact | null,
   size?: number,
-}>();
+  cooldown?: number,
+  isReady?: boolean,
+}>(), {
+  size: 110,
+  cooldown: undefined,
+  isReady: false,
+});
+
+const showDetail: Ref<boolean> = ref(false);
 
 const width = computed(() => `${props.size ?? 110}px`);
 const height = computed(() => `${props.size ?? 110}px`);
-const frameColor = computed(() => `rgb(var(--v-theme-${props.artifact?.colors[0] ?? 'C'}))`)
+const frameColor = computed(() => `rgb(var(--v-theme-${props.artifact?.colors[0] ?? 'C'}))`);
+
+const isOnCooldown = computed(() => (props.cooldown ?? 0) > 0);
+
+const ready = computed(() => props.isReady === true);
+
+const badgeIconSize = computed(() => Math.max(16, Math.round(props.size * 0.13)));
+const badgeFontSize = computed(() => `${Math.max(16, Math.round(props.size * 0.14))}px`);
+const badgePadding = computed(() => `${Math.round(props.size * 0.03)}px ${Math.round(props.size * 0.07)}px`);
 </script>
 
 <style lang="scss" scoped>
@@ -68,6 +105,36 @@ const frameColor = computed(() => `rgb(var(--v-theme-${props.artifact?.colors[0]
     filter: blur(4px);
     z-index: 1;
     opacity: 0.5;
+  }
+}
+
+.cooldown-corner-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 12, 18, 0.9);
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-radius: 9999px;
+  padding: v-bind('badgePadding');
+  font-size: v-bind('badgeFontSize');
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.75);
+  pointer-events: none;
+  user-select: none;
+}
+
+@keyframes halo-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px v-bind('frameColor')) drop-shadow(0 0 8px v-bind('frameColor'));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px v-bind('frameColor')) drop-shadow(0 0 16px rgba(255, 255, 255, 0.8));
   }
 }
 

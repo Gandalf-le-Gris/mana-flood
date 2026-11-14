@@ -29,7 +29,17 @@
           v-for="(artifact, index) in artifacts"
           :key="index"
         >
-          <artifact-portrait :artifact="artifact" />
+          <div
+            class="portrait-wrapper"
+            :class="{ 'can-activate': canActivateArtifact(index) }"
+            @click="triggerArtifactAbility(index)"
+          >
+            <artifact-portrait
+              :artifact="artifact"
+              :cooldown="game.artifactCooldowns?.[index]"
+              :is-ready="canActivateArtifact(index)"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -56,6 +66,9 @@ const battleContext = inject<BattleContext | null>('battleContext', null);
 if (!game.cooldowns) {
   game.cooldowns = [0, 0, 0, 0, 0];
 }
+if (!game.artifactCooldowns) {
+  game.artifactCooldowns = [0, 0, 0, 0, 0];
+}
 
 const healthBar = ref<InstanceType<typeof HealthBar> | null>(null);
 
@@ -63,13 +76,20 @@ const team = computed<(Creature | null)[]>(() => game.team.map(c => c ? buildCre
 const artifacts = computed<(Artifact | null)[]>(() => game.artifacts.map(c => c ? buildArtifact(c) : null));
 
 function onTurnEnd() {
-  if (!game.cooldowns) return;
-  for (let i = 0; i < game.cooldowns.length; i++) {
-    if (game.cooldowns[i] > 0) {
-      game.cooldowns[i]--;
+  if (game.cooldowns) {
+    for (let i = 0; i < game.cooldowns.length; i++) {
+      if (game.cooldowns[i] > 0) {
+        game.cooldowns[i]--;
+      }
     }
   }
-  useGameStore().saveGame();
+  if (game.artifactCooldowns) {
+    for (let i = 0; i < game.artifactCooldowns.length; i++) {
+      if (game.artifactCooldowns[i] > 0) {
+        game.artifactCooldowns[i]--;
+      }
+    }
+  }
 }
 
 function canActivate(index: number): boolean {
@@ -77,6 +97,13 @@ function canActivate(index: number): boolean {
   const creature = team.value[index];
   if (!creature?.activatedAbility) return false;
   return (game.cooldowns?.[index] ?? 0) <= 0;
+}
+
+function canActivateArtifact(index: number): boolean {
+  if (!battleContext || !battleContext.canAct()) return false;
+  const artifact = artifacts.value[index];
+  if (!artifact?.activatedAbility) return false;
+  return (game.artifactCooldowns?.[index] ?? 0) <= 0;
 }
 
 function triggerAbility(index: number) {
@@ -88,7 +115,18 @@ function triggerAbility(index: number) {
   const success = ability.execute(battleContext);
   if (success) {
     game.cooldowns[index] = ability.cooldown;
-    useGameStore().saveGame();
+  }
+}
+
+function triggerArtifactAbility(index: number) {
+  if (!canActivateArtifact(index) || !battleContext) return;
+  const artifact = artifacts.value[index];
+  if (!artifact?.activatedAbility) return;
+
+  const ability = artifact.activatedAbility;
+  const success = ability.execute(battleContext);
+  if (success) {
+    game.artifactCooldowns[index] = ability.cooldown;
   }
 }
 

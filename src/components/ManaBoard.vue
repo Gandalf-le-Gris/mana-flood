@@ -39,6 +39,7 @@ import { GameUtils } from '@/utils/GameUtils';
 import { Game } from '@/types/Game';
 import type { Effect } from '@/types/effects/Effect.ts';
 import { buildCreature } from '@/types/creatures/creatures.ts';
+import { buildArtifact } from '@/types/artifacts/artifacts.ts';
 
 const emit = defineEmits(['match', 'turn-end']);
 
@@ -134,7 +135,8 @@ function collapseColumns() {
 
 function refillBoard() {
   const activeEffects: Effect[] = game.value.currentEnemies.flatMap(e => buildCreature(e).enemyEffects)
-    .concat(game.value.team.flatMap(c => c ? buildCreature(c).teamEffects : []));
+    .concat(game.value.team.flatMap(c => c ? buildCreature(c).teamEffects : []))
+    .concat(game.value.artifacts.flatMap(a => a ? buildArtifact(a).teamEffects : []));
   const weights: Record<ExtendedColor, number> = {
     W: 1,
     U: 1,
