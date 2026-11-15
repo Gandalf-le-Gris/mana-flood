@@ -1,4 +1,4 @@
-export enum EffectCondition {
+export enum EffectTrigger {
   NONE,
   TRIGGER,
   ORB_RATE,

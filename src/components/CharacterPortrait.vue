@@ -58,7 +58,21 @@ const showDetail: Ref<boolean> = ref(false);
 
 const width = computed(() => `${props.size}px`);
 const height = computed(() => `${props.size}px`);
-const frameColor = computed(() => `rgb(var(--v-theme-${props.character?.colors[0] ?? 'C'}))`);
+const frameColor = computed(() => {
+  if (!props.character) {
+    return 'rgb(var(--v-theme-C))';
+  }
+  switch (props.character.colors.length) {
+    case 0:
+      return 'rgb(var(--v-theme-C))';
+    case 1:
+      return `rgb(var(--v-theme-${props.character?.colors[0]}))`;
+    case 2:
+      return `linear-gradient(90deg, rgb(var(--v-theme-${props.character?.colors[0]})) 0%, rgb(var(--v-theme-${props.character?.colors[0]})) 35%, rgb(var(--v-theme-${props.character?.colors[1]})) 65%, rgb(var(--v-theme-${props.character?.colors[1]})) 100%)`;
+    default:
+      return 'rgb(var(--v-theme-WUBRG))';
+  }
+});
 
 const isOnCooldown = computed(() => (props.cooldown ?? 0) > 0);
 
@@ -91,7 +105,7 @@ const badgePadding = computed(() => `${Math.round(props.size * 0.03)}px ${Math.r
     right: 0;
     bottom: 0;
     content: '';
-    background-color: v-bind('frameColor');
+    background: v-bind('frameColor');
     -webkit-mask-image: url('/ui/character-frame.png');
     mask-image: url('/ui/character-frame.png');
     mask-size: cover;

@@ -36,6 +36,12 @@
       "adaptive-omnitool": "Outil universel évolutif"
     }
   },
+  "enchantments": {
+    "one": "Enchantement",
+    "name": {
+      "mirari-s-wake": "Éveil du Mirari"
+    }
+  },
   "planes": {
     "name": {
       "dominaria": "Dominaria"
@@ -62,7 +68,8 @@
       "black-hatred": "Réduit la fréquence des orbes noirs.",
       "red-hatred": "Réduit la fréquence des orbes rouges.",
       "green-hatred": "Réduit la fréquence des orbes verts.",
-      "colorless-hatred": "Réduit la fréquence des orbes incolores."
+      "colorless-hatred": "Réduit la fréquence des orbes incolores.",
+      "enhanced-conversion": "Convertit 1 orbe supplémentaire lorsqu'au moins 3 orbes sont convertis à la fois."
     },
     "enemy": {
       
@@ -87,8 +94,7 @@
       "major-convert-black": "Conversion majeure : noir",
       "major-convert-red": "Conversion majeure : rouge",
       "major-convert-green": "Conversion majeure : vert",
-      "major-convert-colorless": "Conversion majeure : incolore",
-      "skirk-sacrifice": "Ferveur gobeline"
+      "major-convert-colorless": "Conversion majeure : incolore"
     },
     "description": {
       "minor-convert-white": "Convertit 3 orbes aléatoires en orbes blancs.",
@@ -108,8 +114,7 @@
       "major-convert-black": "Convertit 12 orbes aléatoires en orbes noirs.",
       "major-convert-red": "Convertit 12 orbes aléatoires en orbes rouges.",
       "major-convert-green": "Convertit 12 orbes aléatoires en orbes verts.",
-      "major-convert-colorless": "Convertit 12 orbes aléatoires en orbes incolores.",
-      "skirk-sacrifice": "Sacrifie 30 PV de l'équipe pour infliger 150 dégâts de feu à tous les ennemis. Cooldown : 2 tours."
+      "major-convert-colorless": "Convertit 12 orbes aléatoires en orbes incolores."
     }
   }
 }

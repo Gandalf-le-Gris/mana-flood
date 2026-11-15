@@ -40,6 +40,7 @@ import { Game } from '@/types/Game';
 import type { Effect } from '@/types/effects/Effect.ts';
 import { buildCreature } from '@/types/creatures/creatures.ts';
 import { buildArtifact } from '@/types/artifacts/artifacts.ts';
+import { buildEnchantment } from '@/types/enchantments/enchantments.ts';
 
 const emit = defineEmits(['match', 'turn-end']);
 
@@ -136,7 +137,9 @@ function collapseColumns() {
 function refillBoard() {
   const activeEffects: Effect[] = game.value.currentEnemies.flatMap(e => buildCreature(e).enemyEffects)
     .concat(game.value.team.flatMap(c => c ? buildCreature(c).teamEffects : []))
-    .concat(game.value.artifacts.flatMap(a => a ? buildArtifact(a).teamEffects : []));
+    .concat(game.value.artifacts.flatMap(a => a ? buildArtifact(a).teamEffects : []))
+    .concat(game.value.enchantments.flatMap(a => a ? buildEnchantment(a).teamEffects : []))
+    .filter(e => !e.activeCondition || e.activeCondition(game.value));
   const weights: Record<ExtendedColor, number> = {
     W: 1,
     U: 1,
@@ -414,6 +417,9 @@ function convertOrbs(count: number, toColor: ExtendedColor, fromColor?: Extended
   });
 
   if (eligibleOrbs.length === 0) return false;
+  if (count >= 3 && GameUtils.isEffectActive(game.value, 'shared.enhanced-conversion')) {
+    count += 1;
+  }
 
   const shuffled = [...eligibleOrbs].sort(() => Math.random() - 0.5);
   const selected = shuffled.slice(0, count);

@@ -5,6 +5,8 @@ import type { ExtendedColor } from "@/types/Color";
 import { Creature } from "@/types/creatures/Creature";
 import { ShopUtils } from './ShopUtils';
 import { sleep } from './TsUtils';
+import { buildArtifact } from "@/types/artifacts/artifacts";
+import { buildEnchantment } from "@/types/enchantments/enchantments";
 
 interface MatchGroup {
   color: ExtendedColor;
@@ -49,5 +51,13 @@ export class GameUtils {
 
   static computeEnemyDamage(game: Game, attacker: Creature, enemies: Creature[]) {
     return attacker.damageModifier * Creature.baseDamage;
+  }
+
+  static isEffectActive(game: Game, effectId: string) {
+    return game.currentEnemies.flatMap(e => buildCreature(e).enemyEffects)
+      .concat(game.team.flatMap(c => c ? buildCreature(c).teamEffects : []))
+      .concat(game.artifacts.flatMap(a => a ? buildArtifact(a).teamEffects : []))
+      .concat(game.enchantments.flatMap(a => a ? buildEnchantment(a).teamEffects : []))
+      .find(e => e.id === effectId && (!e.activeCondition || e.activeCondition(game)));
   }
 }

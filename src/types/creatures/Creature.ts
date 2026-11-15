@@ -31,7 +31,7 @@ export class Creature {
     C: 0,
   }
 
-  pool: Record<string, number> = {};
+  pool: Record<string, Rarity> = {};
 
   enemyEffects: Effect[] = [];
   teamEffects: Effect[] = [];

@@ -35,11 +35,19 @@
             @click="triggerArtifactAbility(index)"
           >
             <artifact-portrait
-              :artifact="artifact"
+              :artifact
               :cooldown="game.artifactCooldowns?.[index]"
               :is-ready="canActivateArtifact(index)"
             />
           </div>
+        </div>
+      </div>
+      <div class="team enchantments">
+        <div
+          v-for="(enchantment, index) in enchantments"
+          :key="index"
+        >
+          <enchantment-portrait :enchantment />
         </div>
       </div>
     </div>
@@ -49,6 +57,7 @@
 <script setup lang="ts">
 import ArtifactPortrait from './ArtifactPortrait.vue';
 import CharacterPortrait from './CharacterPortrait.vue';
+import EnchantmentPortrait from './EnchantmentPortrait.vue';
 import HealthBar from './HealthBar.vue';
 import { useGameStore } from '@/stores/gameStore';
 import type { Creature } from '@/types/creatures/Creature';
@@ -59,6 +68,8 @@ import type { Artifact } from '@/types/artifacts/Artifact';
 import { buildArtifact } from '@/types/artifacts/artifacts';
 import { CreatureUtils } from '@/utils/CreatureUtils';
 import type { BattleContext } from '@/types/BattleContext';
+import { buildEnchantment } from '@/types/enchantments/enchantments.ts';
+import type { Enchantment } from '@/types/enchantments/Enchantment.ts';
 
 const game: Game = useGameStore().current!;
 const battleContext = inject<BattleContext | null>('battleContext', null);
@@ -74,6 +85,7 @@ const healthBar = ref<InstanceType<typeof HealthBar> | null>(null);
 
 const team = computed<(Creature | null)[]>(() => game.team.map(c => c ? buildCreature(c) : null));
 const artifacts = computed<(Artifact | null)[]>(() => game.artifacts.map(c => c ? buildArtifact(c) : null));
+const enchantments = computed<(Enchantment | null)[]>(() => game.enchantments.map(c => c ? buildEnchantment(c) : null));
 
 function onTurnEnd() {
   if (game.cooldowns) {
@@ -158,6 +170,10 @@ defineExpose({ takeDamage, heal, onTurnEnd });
 
   &.artifacts > * {
     margin: 8px 20px 0;
+  }
+
+  &.enchantments > * {
+    margin: 20px 10px 0;
   }
 }
 

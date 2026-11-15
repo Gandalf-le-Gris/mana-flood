@@ -2,7 +2,6 @@
   <div class="background">
     <div class="general-info beleren-small-caps">
       {{ $t(`planes.name.${buildPlane(game.plane).name}`) }} - {{ game.floor }}
-      <v-btn @click="shopOpen = !shopOpen"></v-btn>
     </div>
     <battle-info
       ref="battleInfo"

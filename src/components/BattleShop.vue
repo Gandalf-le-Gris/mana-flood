@@ -43,6 +43,25 @@
             />
           </v-col>
         </template>
+        <template v-if="game.shopContent.enchantment">
+          <v-col
+            class="d-flex flex-column ma-auto hover-scale"
+            @click="addEnchantment(buildEnchantment(game.shopContent.enchantment))"
+          >
+            <enchantment-portrait :enchantment="buildEnchantment(game.shopContent.enchantment)" :size="230" />
+            <h2 class="mt-3 mb-0 text-center">{{ $t(`enchantments.name.${buildEnchantment(game.shopContent.enchantment).name}`) }}</h2>
+            <h3 class="my-0 text-center">{{ $t('enchantments.one') }}</h3>
+          </v-col>
+          <v-col cols="auto">
+            <v-divider
+              vertical
+              opacity=".7"
+              thickness="3"
+              gradient
+              class="h-100"
+            />
+          </v-col>
+        </template>
         <v-col
           class="d-flex flex-column ma-auto hover-scale"
           @click="healTeam"
@@ -58,6 +77,7 @@
       v-model="showTeamDetail"
       :creature="creatureToAdd"
       :artifact="artifactToAdd"
+      :enchantment="enchantmentToAdd"
       @edited="commitTeamEdit"
     />
   </div>
@@ -67,6 +87,7 @@
 import { buildCreature } from '@/types/creatures/creatures';
 import ArtifactPortrait from './ArtifactPortrait.vue';
 import CharacterPortrait from './CharacterPortrait.vue';
+import EnchantmentPortrait from './EnchantmentPortrait.vue';
 import UiCard from './UiCard.vue';
 import { useGameStore } from '@/stores/gameStore';
 import type { Game } from '@/types/Game';
@@ -76,6 +97,8 @@ import { ref, type Ref } from 'vue';
 import type { Creature } from '@/types/creatures/Creature.ts';
 import type { Artifact } from '@/types/artifacts/Artifact.ts';
 import TeamDetailDialog from './TeamDetailDialog.vue';
+import { buildEnchantment } from '@/types/enchantments/enchantments.ts';
+import type { Enchantment } from '@/types/enchantments/Enchantment.ts';
 
 const game: Game = useGameStore().current!;
 
@@ -84,16 +107,26 @@ const emits = defineEmits(['close']);
 const showTeamDetail: Ref<boolean> = ref(false);
 const creatureToAdd: Ref<Creature | undefined> = ref();
 const artifactToAdd: Ref<Artifact | undefined> = ref();
+const enchantmentToAdd: Ref<Enchantment | undefined> = ref();
 
 function addCreature(creature: Creature) {
   creatureToAdd.value = creature;
   artifactToAdd.value = undefined;
+  enchantmentToAdd.value = undefined;
   showTeamDetail.value = true;
 }
 
 function addArtifact(artifact: Artifact) {
   creatureToAdd.value = undefined;
   artifactToAdd.value = artifact;
+  enchantmentToAdd.value = undefined;
+  showTeamDetail.value = true;
+}
+
+function addEnchantment(enchantment: Artifact) {
+  creatureToAdd.value = undefined;
+  artifactToAdd.value = undefined;
+  enchantmentToAdd.value = enchantment;
   showTeamDetail.value = true;
 }
 
@@ -139,7 +172,11 @@ function commitTeamEdit() {
   }
 }
 
-.shop-content .v-col:not(.v-col--cols-auto) {
-  width: 300px;
+.shop-content {
+  width: max-content;
+
+  .v-col:not(.v-col--cols-auto) {
+    width: 300px;
+  }
 }
 </style>

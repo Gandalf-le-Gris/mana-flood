@@ -1,7 +1,7 @@
+import { Rarity } from "../creatures/Creature";
 import type { ActivatedEffect } from "../effects/activated/ActivatedEffect";
 import { conversionEffects } from "../effects/activated/ConversionEffects";
-import { affinityEffects } from "../effects/AffinityEffects";
-import { Artifact, Rarity } from "./Artifact";
+import { Artifact } from "./Artifact";
 
 export class AdaptiveOmnitool extends Artifact {
   name = 'adaptive-omnitool';

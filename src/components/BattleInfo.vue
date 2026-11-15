@@ -15,7 +15,7 @@
           />
         </v-col>
       </v-row>
-      <div class="my-12 py-4"></div>
+      <div class="my-8 py-4"></div>
       <team-info ref="teamInfo" />
     </div>
   </div>
@@ -145,5 +145,6 @@ watch(() => game.floor, rebuildEnemies);
 .wrapper {
   position: relative;
   width: 800px;
+  margin-top: 92px;
 }
 </style>
