@@ -243,17 +243,18 @@ function swapTeam(i: number, j: number) {
     bottom: 0;
     content: '';
     background: #000;
+    border-radius: 40px;
     z-index: -1;
   }
 
   &:after {
     position: absolute;
-    top: -32px;
-    left: -32px;
-    right: -32px;
-    bottom: -32px;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
     content: '';
-    border-image: url(/ui/metal-frame.png) 128 / 128px round;
+    border-image: url(/ui/metal-frame.png) 100 / 80px round;
     pointer-events: none;
   }
 }
