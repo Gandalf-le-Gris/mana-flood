@@ -11,7 +11,7 @@ export class Game {
 
   floor: number = 0;
   plane: string = 'dominaria';
-  team: (string | null)[] = ['llanowar-elves', 'llanowar-elves', 'llanowar-elves', 'skirk-prospector', 'skirk-prospector'];
+  team: (string | null)[] = ['knight-of-new-benalia', 'academy-journeymage', 'cabal-evangel', 'skirk-prospector', 'llanowar-elves'];
   cooldowns: number[] = [0, 0, 0, 0, 0];
   artifactCooldowns: number[] = [0, 0, 0, 0, 0];
   artifacts: (string | null)[] = ['adaptive-omnitool', null, null, null, null];

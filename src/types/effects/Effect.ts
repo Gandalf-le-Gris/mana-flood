@@ -1,3 +1,5 @@
+import type { MatchGroup } from '@/pages/BattleScreen.vue';
+import type { BattleContext } from '../BattleContext';
 import type { ExtendedColor } from '../Color';
 import type { Game } from '../Game';
 import { EffectTrigger } from './EffectCondition';
@@ -8,6 +10,7 @@ export class Effect {
   activeCondition?: (game: Game) => boolean;
 
   orbRateModifier?: Partial<Record<ExtendedColor, number>>;
+  matchEffect?: (context: BattleContext, match: MatchGroup) => void;
 
   withId(id: string): Effect {
     this.id = id;

@@ -1,6 +1,6 @@
 import type { Color } from "../Color";
 import { Rarity } from "../creatures/Creature";
-import { enhancedConversionEffect } from "../effects/EnhancedConversionEffect";
+import { enhancedConversionEffect } from "../effects/shared/EnhancedConversionEffect";
 import { Enchantment } from "./Enchantment";
 
 export class MirarisWake extends Enchantment {

@@ -135,11 +135,7 @@ function collapseColumns() {
 }
 
 function refillBoard() {
-  const activeEffects: Effect[] = game.value.currentEnemies.flatMap(e => buildCreature(e).enemyEffects)
-    .concat(game.value.team.flatMap(c => c ? buildCreature(c).teamEffects : []))
-    .concat(game.value.artifacts.flatMap(a => a ? buildArtifact(a).teamEffects : []))
-    .concat(game.value.enchantments.flatMap(a => a ? buildEnchantment(a).teamEffects : []))
-    .filter(e => !e.activeCondition || e.activeCondition(game.value));
+  const activeEffects: Effect[] = GameUtils.getActiveEffects(game.value);
   const weights: Record<ExtendedColor, number> = {
     W: 1,
     U: 1,
@@ -431,6 +427,26 @@ function convertOrbs(count: number, toColor: ExtendedColor, fromColor?: Extended
   return true;
 }
 
+function destroyOrbs(count: number, avoidColor?: ExtendedColor): boolean {
+  if (isProcessing.value || isDragging.value || props.disabled) return false;
+
+  const eligibleOrbs = orbs.value.filter(o => o.color !== avoidColor);
+
+  if (eligibleOrbs.length === 0) return false;
+
+  const shuffled = [...eligibleOrbs].sort(() => Math.random() - 0.5);
+  const selected = shuffled.slice(0, count);
+
+  const coordsToRemove = new Set(
+    selected.map(c => `${c.r},${c.c}`)
+  );
+  orbs.value = orbs.value.filter(o => !coordsToRemove.has(`${o.r},${o.c}`));
+  collapseColumns();
+  refillBoard();
+
+  return true;
+}
+
 function shuffleBoard(): boolean {
   if (isProcessing.value || isDragging.value || props.disabled) return false;
   const colors = orbs.value.map(o => o.color).sort(() => Math.random() - 0.5);
@@ -446,6 +462,7 @@ function isBusy(): boolean {
 
 defineExpose({
   convertOrbs,
+  destroyOrbs,
   shuffleBoard,
   isBusy,
 });

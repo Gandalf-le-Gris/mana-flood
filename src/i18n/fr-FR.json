@@ -27,7 +27,11 @@
     "one": "Créature",
     "name": {
       "llanowar-elves": "Elfes de Llanowar",
-      "skirk-prospector": "Prospecteur skirkien"
+      "skirk-prospector": "Prospecteur skirkien",
+      "knight-of-new-benalia": "Chevalière de la Nouvelle Bénalia",
+      "academy-journeymage": "Mage compagnon de l'Académie",
+      "cabal-evangel": "Prédicatrice de la Coterie",
+      "urza": "Urza"
     }
   },
   "artifacts": {
@@ -72,7 +76,10 @@
       "enhanced-conversion": "Convertit 1 orbe supplémentaire lorsqu'au moins 3 orbes sont convertis à la fois."
     },
     "enemy": {
-      
+      "artifact-lock": "Les capacités des artefacts ne peuvent pas être activées."
+    },
+    "team": {
+      "artifact-recharge": "Lorsqu'au moins 5 orbes incolores sont associés, réduit le temps de recharge d'un artefact aléatoire de 1 tour."
     }
   },
   "abilities": {
@@ -94,7 +101,33 @@
       "major-convert-black": "Conversion majeure : noir",
       "major-convert-red": "Conversion majeure : rouge",
       "major-convert-green": "Conversion majeure : vert",
-      "major-convert-colorless": "Conversion majeure : incolore"
+      "major-convert-colorless": "Conversion majeure : incolore",
+      "minor-destruction-white": "Destruction mineure : blanc",
+      "minor-destruction-blue": "Destruction mineure : bleu",
+      "minor-destruction-black": "Destruction mineure : noir",
+      "minor-destruction-red": "Destruction mineure : rouge",
+      "minor-destruction-green": "Destruction mineure : vert",
+      "minor-destruction-colorless": "Destruction mineure : incolore",
+      "destruction-white": "Destruction : blanc",
+      "destruction-blue": "Destruction : bleu",
+      "destruction-black": "Destruction : noir",
+      "destruction-red": "Destruction : rouge",
+      "destruction-green": "Destruction : vert",
+      "destruction-colorless": "Destruction : incolore",
+      "major-destruction-white": "Destruction majeure : blanc",
+      "major-destruction-blue": "Destruction majeure : bleu",
+      "major-destruction-black": "Destruction majeure : noir",
+      "major-destruction-red": "Destruction majeure : rouge",
+      "major-destruction-green": "Destruction majeure : vert",
+      "major-destruction-colorless": "Destruction majeure : incolore",
+      "minor-healing": "Soin mineur",
+      "healing": "Soin",
+      "major-healing": "Soin majeur",
+      "shuffle": "Manipulation arcanique",
+      "minor-sacrifice": "Sacrifice mineur",
+      "sacrifice": "Sacrifice",
+      "major-sacrifice": "Sacrifice majeur",
+      "lord-high-artificer": "Seigneur grand-artificier"
     },
     "description": {
       "minor-convert-white": "Convertit 3 orbes aléatoires en orbes blancs.",
@@ -114,7 +147,33 @@
       "major-convert-black": "Convertit 12 orbes aléatoires en orbes noirs.",
       "major-convert-red": "Convertit 12 orbes aléatoires en orbes rouges.",
       "major-convert-green": "Convertit 12 orbes aléatoires en orbes verts.",
-      "major-convert-colorless": "Convertit 12 orbes aléatoires en orbes incolores."
+      "major-convert-colorless": "Convertit 12 orbes aléatoires en orbes incolores.",
+      "minor-destruction-white": "Détruit 5 orbes aléatoires non-blancs.",
+      "minor-destruction-blue": "Détruit 5 orbes aléatoires non-bleus.",
+      "minor-destruction-black": "Détruit 5 orbes aléatoires non-noirs.",
+      "minor-destruction-red": "Détruit 5 orbes aléatoires non-rouges.",
+      "minor-destruction-green": "Détruit 5 orbes aléatoires non-verts.",
+      "minor-destruction-colorless": "Détruit 5 orbes aléatoires non-incolores.",
+      "destruction-white": "Détruit 10 orbes aléatoires non-blancs.",
+      "destruction-blue": "Détruit 10 orbes aléatoires non-bleus.",
+      "destruction-black": "Détruit 10 orbes aléatoires non-noirs.",
+      "destruction-red": "Détruit 10 orbes aléatoires non-rouges.",
+      "destruction-green": "Détruit 10 orbes aléatoires non-verts.",
+      "destruction-colorless": "Détruit 10 orbes aléatoires non-incolores.",
+      "major-destruction-white": "Détruit 15 orbes aléatoires non-blancs.",
+      "major-destruction-blue": "Détruit 15 orbes aléatoires non-bleus.",
+      "major-destruction-black": "Détruit 15 orbes aléatoires non-noirs.",
+      "major-destruction-red": "Détruit 15 orbes aléatoires non-rouges.",
+      "major-destruction-green": "Détruit 15 orbes aléatoires non-verts.",
+      "major-destruction-colorless": "Détruit 15 orbes aléatoires non-incolores.",
+      "minor-healing": "Restaure 100 PV.",
+      "healing": "Restaure 200 PV.",
+      "major-healing": "Restaure 300 PV.",
+      "shuffle": "Mélange les orbes.",
+      "minor-sacrifice": "Convertit 5 orbes aléatoires en orbes noirs au prix de 50 PV.",
+      "sacrifice": "Convertit 10 orbes aléatoires en orbes noirs au prix de 75 PV.",
+      "major-sacrifice": "Convertit 15 orbes aléatoires en orbes noirs au prix de 100 PV.",
+      "lord-high-artificer": "Réinitialise les temps de recharge de tous les artefacts."
     }
   }
 }

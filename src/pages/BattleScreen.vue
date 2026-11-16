@@ -49,6 +49,11 @@ import TeamDetailDialog from '@/components/TeamDetailDialog.vue';
 import IconButton from '@/components/IconButton.vue';
 import type { BattleContext } from '@/types/BattleContext';
 import { sleep } from '@/utils/TsUtils';
+import type { Effect } from '@/types/effects/Effect';
+
+const game = useGameStore().current!;
+const shopOpen = ref<boolean>(false);
+const teamOpen = ref<boolean>(false);
 
 const battleInfo = ref<InstanceType<typeof BattleInfo> | null>(null);
 const manaBoard = ref<InstanceType<typeof ManaBoard> | null>(null);
@@ -69,6 +74,7 @@ async function checkBattleEnd() {
 }
 
 const battleContext: BattleContext = {
+  game,
   healTeam(amount: number) {
     battleInfo.value?.healTeam(amount);
   },
@@ -85,12 +91,19 @@ const battleContext: BattleContext = {
     if (manaBoard.value?.isBusy() || isBattleEnding.value) return false;
     return manaBoard.value?.convertOrbs(count, toColor, fromColor) ?? false;
   },
-  destroyOrbs(_count: number, _color?: ExtendedColor) {
-    return false;
+  destroyOrbs(count: number, avoidColor?: ExtendedColor) {
+    if (manaBoard.value?.isBusy() || isBattleEnding.value) return false;
+    return manaBoard.value?.destroyOrbs(count, avoidColor) ?? false;
   },
   shuffleBoard() {
     if (manaBoard.value?.isBusy() || isBattleEnding.value) return false;
     return manaBoard.value?.shuffleBoard() ?? false;
+  },
+  rechargeCreature(index: number, turns: number) {
+    battleInfo.value?.rechargeCreature(index, turns);
+  },
+  rechargeArtifact(index: number, turns: number) {
+    battleInfo.value?.rechargeArtifact(index, turns);
   },
   canAct() {
     return !(manaBoard.value?.isBusy() || isBattleEnding.value);
@@ -99,25 +112,28 @@ const battleContext: BattleContext = {
 
 provide('battleContext', battleContext);
 
-const game = computed<Game>(() => useGameStore().current!);
-const shopOpen = ref<boolean>(false);
-const teamOpen = ref<boolean>(false);
+const backgroundImage = computed(() => `url(/planes/${buildPlane(game.plane).name}.jpg)`);
 
-const backgroundImage = computed(() => `url(/planes/${buildPlane(game.value.plane).name}.jpg)`);
-
-interface MatchGroup {
+export interface MatchGroup {
   color: ExtendedColor;
   size: number;
 }
 
 function processMatch(matches: MatchGroup[]) {
+  const activeEffects: Effect[] = GameUtils.getActiveEffects(game);
   for (const match of matches) {
-    const damage = GameUtils.computeMatchDamage(game.value, match);
+    const damage = GameUtils.computeMatchDamage(game, match);
     battleInfo.value?.dealDamageToEnemy(damage, match.color);
+    for (const effect of activeEffects) {
+      if (effect.matchEffect) {
+        effect.matchEffect(battleContext, match);
+      }
+    }
   }
 }
 
 function onTurnEnd() {
+  battleInfo.value?.teamInfo?.onTurnEnd();
   if (battleInfo.value?.areAllEnemiesDead()) {
     checkBattleEnd();
     return;
@@ -132,7 +148,7 @@ function openShop() {
 function commitFloor() {
   shopOpen.value = false;
   isBattleEnding.value = false;
-  GameUtils.nextFloor(game.value);
+  GameUtils.nextFloor(game);
   useGameStore().saveGame();
 }
 </script>

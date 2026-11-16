@@ -20,7 +20,7 @@
         <h2 class="beleren-small-caps text-center">{{ $t(`creatures.name.${enemy.name}`) }}</h2>
         <div class="d-flex justify-space-between mx-5 mt-n6">
           <h2 class="d-flex">
-            {{ enemy.damageModifier * Creature.baseDamage }}
+            {{ CreatureUtils.getEnemyDamage(enemy, game) }}
             <v-icon
               icon="mdi-sword"
               size="xs"
@@ -54,14 +54,17 @@
     <character-detail-dialog
       v-model="showDetail"
       :character="enemy"
-      :damage="enemy.damageModifier * Creature.baseDamage"
+      :damage="CreatureUtils.getEnemyDamage(enemy, game)"
       enemy
     />
   </div>
 </template>
 
 <script setup lang="ts">
+import { useGameStore } from '@/stores/gameStore.ts';
 import { Creature } from '@/types/creatures/Creature';
+import type { Game } from '@/types/Game.ts';
+import { CreatureUtils } from '@/utils/CreatureUtils.ts';
 import { computed, ref, type Ref } from 'vue';
 import CharacterDetailDialog from './CharacterDetailDialog.vue';
 
@@ -71,6 +74,8 @@ const props = defineProps<{
 }>();
 
 const showDetail: Ref<boolean> = ref(false);
+
+const game: Game = useGameStore().current!;
 
 const width = computed(() => '250px');
 const height = computed(() => '370px');
@@ -145,7 +150,7 @@ const frameColor = computed(() => `rgb(var(--v-theme-${props.enemy.colors[0]}))`
 
 .text {
   position: absolute;
-  top: 250px;
+  bottom: -8px;
   width: 100%;
   z-index: 2;
   text-shadow: black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px;

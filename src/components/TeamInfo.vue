@@ -70,6 +70,7 @@ import { CreatureUtils } from '@/utils/CreatureUtils';
 import type { BattleContext } from '@/types/BattleContext';
 import { buildEnchantment } from '@/types/enchantments/enchantments.ts';
 import type { Enchantment } from '@/types/enchantments/Enchantment.ts';
+import { GameUtils } from '@/utils/GameUtils.ts';
 
 const game: Game = useGameStore().current!;
 const battleContext = inject<BattleContext | null>('battleContext', null);
@@ -108,14 +109,15 @@ function canActivate(index: number): boolean {
   if (!battleContext || !battleContext.canAct()) return false;
   const creature = team.value[index];
   if (!creature?.activatedAbility) return false;
-  return (game.cooldowns?.[index] ?? 0) <= 0;
+  return (game.cooldowns?.[index] ?? 0) <= 0 && creature?.activatedAbility.condition(game);
 }
 
 function canActivateArtifact(index: number): boolean {
   if (!battleContext || !battleContext.canAct()) return false;
   const artifact = artifacts.value[index];
   if (!artifact?.activatedAbility) return false;
-  return (game.artifactCooldowns?.[index] ?? 0) <= 0;
+  if (GameUtils.isEffectActive(game, 'enemy.artifact-lock')) return false;
+  return (game.artifactCooldowns?.[index] ?? 0) <= 0 && artifact?.activatedAbility.condition(game);
 }
 
 function triggerAbility(index: number) {
@@ -149,12 +151,24 @@ function takeDamage(damage: number) {
 
 function heal(amount: number) {
   if (amount > 0) {
-    game.hp += amount;
+    game.hp = Math.min(GameUtils.getTotalHp(game), game.hp + amount);
     CreatureUtils.visualDamage(amount, 'G', healthBar.value?.$el);
   }
 }
 
-defineExpose({ takeDamage, heal, onTurnEnd });
+function rechargeCreature(index: number, turns: number) {
+  if (game.cooldowns[index]) {
+    game.cooldowns[index] = Math.max(0, game.cooldowns[index] - turns);
+  }
+}
+
+function rechargeArtifact(index: number, turns: number) {
+  if (game.artifactCooldowns[index]) {
+    game.artifactCooldowns[index] = Math.max(0, game.artifactCooldowns[index] - turns);
+  }
+}
+
+defineExpose({ takeDamage, heal, rechargeCreature, rechargeArtifact, onTurnEnd });
 </script>
 
 <style lang="scss" scoped>

@@ -5,7 +5,7 @@
   >
     <div class="wrapper">
       <div class="d-flex position-relative">
-        <h1 class="my-2 text-center w-100 beleren-small-caps">{{ $t(`enchantments.name.${enchantment.name}`) }}</h1>
+        <h1 class="title beleren-small-caps">{{ $t(`enchantments.name.${enchantment.name}`) }}</h1>
         <icon-button
           icon="mdi-close"
           size="48"
@@ -110,5 +110,11 @@ const show = defineModel({ type: Boolean, required: true });
   position: absolute;
   top: 0;
   right: 0;
+}
+
+.title {
+  text-align: center;
+  max-width: 78%;
+  margin: 8px auto;
 }
 </style>

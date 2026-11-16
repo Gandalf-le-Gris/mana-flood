@@ -102,8 +102,15 @@ function damageTeam(amount: number) {
   teamInfo.value?.takeDamage(amount);
 }
 
+function rechargeCreature(index: number, turns: number) {
+  teamInfo.value?.rechargeCreature(index, turns);
+}
+
+function rechargeArtifact(index: number, turns: number) {
+  teamInfo.value?.rechargeArtifact(index, turns);
+}
+
 function enemyTurn() {
-  teamInfo.value?.onTurnEnd();
   for (const enemy of enemies.value) {
     if (enemy.hp > 0) {
       enemy.timer--;
@@ -124,12 +131,14 @@ defineExpose({
   teamInfo,
   areAllEnemiesDead,
   hasAliveEnemies,
+  rechargeCreature,
+  rechargeArtifact,
 });
 
 function rebuildEnemies() {
   enemies.value = game.currentEnemies.map(e => buildCreature(e));
   enemies.value.forEach(e => {
-    e.hp = CreatureUtils.getHp(e);
+    e.hp = CreatureUtils.getEnemyHp(e, game);
     e.timer = e.speed;
   });
 }

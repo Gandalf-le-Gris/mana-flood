@@ -2,6 +2,7 @@ import type { ExtendedColor } from "@/types/Color";
 import { Creature } from "@/types/creatures/Creature";
 import { creatures } from "@/types/creatures/creatures";
 import { shuffle } from "./ArrayUtils";
+import type { Game } from '@/types/Game';
 
 export class CreatureUtils {
   static getRandomCreature(plane: string): string {
@@ -19,6 +20,19 @@ export class CreatureUtils {
 
   static getDamage(creature: Creature, color: ExtendedColor, size: number) {
     return Math.round(creature.damageModifier * (creature.colorAffinity[color] ?? 0) * size);
+  }
+
+  static getEnemyHp(creature: Creature, game?: Game) {
+    return Math.round(creature.hpModifier
+      * Creature.baseHp
+      * 1.02 ** ((game?.floor ?? 1) - 1));
+  }
+
+  static getEnemyDamage(attacker: Creature, game?: Game) {
+    return Math.round(attacker.damageModifier
+      * Creature.baseDamage
+      * (.2 + attacker.speed) / 2
+      * 1.02 ** ((game?.floor ?? 1) - 1));
   }
 
   static visualDamage(damage: number, color: ExtendedColor, el: HTMLElement) {

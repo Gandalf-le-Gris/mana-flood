@@ -1,5 +1,5 @@
-import { getColorName, type ExtendedColor } from '../Color';
-import { Effect } from './Effect';
+import { getColorName, type ExtendedColor } from '../../Color';
+import { Effect } from '../Effect';
 
 class Affinity {
   readonly value: number = 0;

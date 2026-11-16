@@ -1,6 +1,6 @@
 import type { Color } from "../Color";
 import { conversionEffects } from '../effects/activated/ConversionEffects';
-import { affinityEffects } from '../effects/AffinityEffects';
+import { affinityEffects } from '../effects/shared/AffinityEffects';
 import { Creature, Rarity } from "./Creature";
 
 export class LlanowarElves extends Creature {

@@ -1,14 +1,14 @@
 import type { Color } from "../Color";
-import { conversionEffects } from '../effects/activated/ConversionEffects';
-import { affinityEffects } from '../effects/AffinityEffects';
+import { destructionEffects } from '../effects/activated/DestructionEffects';
+import { affinityEffects } from '../effects/shared/AffinityEffects';
 import { Creature, Rarity } from "./Creature";
 
 export class SkirkProspector extends Creature {
   name = 'skirk-prospector';
   colors = ['R'] as Color[];
 
-  hpModifier = .6;
-  damageModifier = .4;
+  hpModifier = .4;
+  damageModifier = .6;
   speed = 2;
 
   colorAffinity = {
@@ -25,5 +25,5 @@ export class SkirkProspector extends Creature {
   };
   
   enemyEffects = [affinityEffects.redAffinity];
-  activatedAbility = conversionEffects.minorRedConversion;
+  activatedAbility = destructionEffects.minorRedDestruction;
 }

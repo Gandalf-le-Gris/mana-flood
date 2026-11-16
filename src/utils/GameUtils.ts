@@ -50,14 +50,19 @@ export class GameUtils {
   }
 
   static computeEnemyDamage(game: Game, attacker: Creature, enemies: Creature[]) {
-    return attacker.damageModifier * Creature.baseDamage;
+    return CreatureUtils.getEnemyDamage(attacker, game);
   }
 
-  static isEffectActive(game: Game, effectId: string) {
+  static getActiveEffects(game: Game) {
     return game.currentEnemies.flatMap(e => buildCreature(e).enemyEffects)
       .concat(game.team.flatMap(c => c ? buildCreature(c).teamEffects : []))
       .concat(game.artifacts.flatMap(a => a ? buildArtifact(a).teamEffects : []))
       .concat(game.enchantments.flatMap(a => a ? buildEnchantment(a).teamEffects : []))
-      .find(e => e.id === effectId && (!e.activeCondition || e.activeCondition(game)));
+      .filter(e => !e.activeCondition || e.activeCondition(game));
+  }
+
+  static isEffectActive(game: Game, effectId: string) {
+    return this.getActiveEffects(game)
+      .find(e => e.id === effectId);
   }
 }

@@ -1,3 +1,3 @@
-import { Effect } from "./Effect";
+import { Effect } from "../Effect";
 
 export const enhancedConversionEffect = new Effect().withId('shared.enhanced-conversion');
