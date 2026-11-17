@@ -31,7 +31,8 @@
       "knight-of-new-benalia": "Chevalière de la Nouvelle Bénalia",
       "academy-journeymage": "Mage compagnon de l'Académie",
       "cabal-evangel": "Prédicatrice de la Coterie",
-      "urza": "Urza"
+      "urza": "Urza",
+      "karnstruct": "Construction"
     }
   },
   "artifacts": {
@@ -47,8 +48,12 @@
     }
   },
   "planes": {
+    "next": "Choisissez votre prochaine destination",
     "name": {
-      "dominaria": "Dominaria"
+      "dominaria": "Dominaria",
+      "llanowar": "Llanowar",
+      "ravnica": "Ravnica",
+      "zendikar": "Zendikar"
     }
   },
   "effects": {

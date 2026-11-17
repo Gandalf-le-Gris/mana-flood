@@ -21,10 +21,17 @@ export class GameUtils {
   }
 
   static async nextFloor(game: Game) {
-    game.currentEnemies = Array.from(
-      { length: 1 + Number(game.floor % 10 > 2) + Number(game.floor % 10 > 5) },
-      () => CreatureUtils.getRandomCreature(game.plane),
-    );
+    if (game.floor % 10 !== 9) {
+      game.currentEnemies = Array.from(
+        { length: 1 + Number(game.floor % 10 > 2) + Number(game.floor % 10 > 5) },
+        () => CreatureUtils.getRandomCreature(game.plane),
+      );
+    } else {
+      const boss = CreatureUtils.getRandomBoss(game.plane);
+      const enemies = buildCreature(boss).summons;
+      enemies.splice(Math.floor(enemies.length / 2), 0, boss);
+      game.currentEnemies = enemies;
+    }
     await sleep(500);
     game.shopContent = ShopUtils.getShop(game);
     game.hp = Math.min(game.hp, GameUtils.getTotalHp(game));

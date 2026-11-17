@@ -6,8 +6,8 @@ export class ArtifactUtils {
     return shuffle(
       artifacts
       .map(c => new c())
-      .map(c => Array.from({ length: c.pool[plane] ?? c.pool['any'] ?? 0 }, () => structuredClone(c)))
+      .map(c => Array.from({ length: Number(c.pool[plane] ?? c.pool['any'] ?? 0) }, () => structuredClone(c)))
       .flat()
-    )[0].name ?? 'adaptive-omnitool';
+    )[0]?.name ?? 'adaptive-omnitool';
   }
 }

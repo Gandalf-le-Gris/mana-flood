@@ -1,9 +1,10 @@
 <template>
   <div class="d-flex">
-    <mana-board />
+    <plane-portal :plane="buildPlane('zendikar')" class="ma-12" />
   </div>
 </template>
 
 <script setup lang="ts">
-import ManaBoard from '@/components/ManaBoard.vue';
+import PlanePortal from '@/components/PlanePortal.vue';
+import { buildPlane } from '@/types/planes/planes';
 </script>

@@ -36,4 +36,7 @@ export class Creature {
   enemyEffects: Effect[] = [];
   teamEffects: Effect[] = [];
   activatedAbility?: ActivatedEffect;
+
+  summons: string[] = [];
+  token: boolean = false;
 }

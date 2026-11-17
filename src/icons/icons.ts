@@ -58,6 +58,7 @@ import KeywordElusive from './KeywordElusive.vue';
 import KeywordExtort from './KeywordExtort.vue';
 import KeywordEvolve from './KeywordEvolve.vue';
 import Knowledge from './Knowledge.vue';
+import Boss from './Boss.vue';
 
 const customSvgNameToComponent: any = {
   B,
@@ -118,6 +119,7 @@ const customSvgNameToComponent: any = {
   'keyword-Reach': KeywordReach,
   'keyword-Trample': KeywordTrample,
   'keyword-Vigilance': KeywordVigilance,
+  boss: Boss,
 };
 
 export function iconExists(icon: string) {

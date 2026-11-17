@@ -1,6 +1,7 @@
 import { AcademyJourneymage } from './AcademyJourneymage';
 import { CabalEvangel } from './CabalEvangel';
 import type { Creature } from "./Creature";
+import { Karnstruct } from './Karnstruct';
 import { KnightOfNewBenalia } from './KnightOfNewBenalia';
 import { LlanowarElves } from "./LlanowarElves";
 import { SkirkProspector } from "./SkirkProspector";
@@ -13,6 +14,7 @@ export const creatures: typeof Creature[] = [
   AcademyJourneymage,
   CabalEvangel,
   Urza,
+  Karnstruct,
 ];
 
 export function buildCreature(creature: string | Creature): Creature {

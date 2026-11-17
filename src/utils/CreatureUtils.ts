@@ -1,6 +1,6 @@
 import type { ExtendedColor } from "@/types/Color";
-import { Creature } from "@/types/creatures/Creature";
-import { creatures } from "@/types/creatures/creatures";
+import { Creature, Rarity } from "@/types/creatures/Creature";
+import { buildCreature, creatures } from "@/types/creatures/creatures";
 import { shuffle } from "./ArrayUtils";
 import type { Game } from '@/types/Game';
 
@@ -9,9 +9,16 @@ export class CreatureUtils {
     return shuffle(
       creatures
       .map(c => new c())
-      .map(c => Array.from({ length: c.pool[plane] ?? 0 }, () => structuredClone(c)))
+      .map(c => Array.from({ length: Number(c.pool[plane] ?? c.pool['any'] ?? 0) }, () => structuredClone(c)))
       .flat()
-    )[0].name ?? 'llanowar-elves';
+    )[0]?.name ?? 'llanowar-elves';
+  }
+
+  static getRandomBoss(plane: string): string {
+    const bosses = creatures
+      .map(c => new c())
+      .filter(c => (c.pool[plane] ?? c.pool['any']) === Rarity.BOSS);
+    return shuffle(bosses)[0]?.name ?? 'urza';
   }
 
   static getHp(creature: Creature) {
@@ -25,14 +32,27 @@ export class CreatureUtils {
   static getEnemyHp(creature: Creature, game?: Game) {
     return Math.round(creature.hpModifier
       * Creature.baseHp
-      * 1.02 ** ((game?.floor ?? 1) - 1));
+      * 1.02 ** ((game?.floor ?? 1) - 1)
+      * (1 + 2 * Number(this.isBoss(creature, game?.plane)))
+      * (1 - .3 * Number(creature.token))
+      * (1 - .2 * (game?.currentEnemies.map(buildCreature).filter(c => c.token).length ?? 0) * Number(this.isBoss(creature, game?.plane))));
   }
 
   static getEnemyDamage(attacker: Creature, game?: Game) {
     return Math.round(attacker.damageModifier
       * Creature.baseDamage
-      * (.2 + attacker.speed) / 2
-      * 1.02 ** ((game?.floor ?? 1) - 1));
+      * (attacker.speed - .2) / 2
+      * 1.02 ** ((game?.floor ?? 1) - 1)
+      * (1 + .3 * Number(this.isBoss(attacker, game?.plane)))
+      * (1 - .2 * Number(attacker.token))
+      * (1 - .1 * (game?.currentEnemies.map(buildCreature).filter(c => c.token).length ?? 0) * Number(this.isBoss(attacker, game?.plane))));
+  }
+
+  static isBoss(creature: Creature, plane?: string) {
+    if (plane) {
+      return creature.pool[plane] === Rarity.BOSS;
+    }
+    return Object.values(creature.pool).includes(Rarity.BOSS);
   }
 
   static visualDamage(damage: number, color: ExtendedColor, el: HTMLElement) {

@@ -1,8 +1,16 @@
 import { Dominaria } from "./Dominaria";
+import { Llanowar } from './Llanowar';
 import type { Plane } from "./Plane";
+import { Ravnica } from './Ravnica';
+import { Zendikar } from './Zendikar';
 
 export const planes: typeof Plane[] = [
-  Dominaria
+  Dominaria,
+  Llanowar,
+
+  Ravnica,
+
+  Zendikar,
 ];
 
 export function buildPlane(plane: string | Plane): Plane {

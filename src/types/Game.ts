@@ -14,8 +14,8 @@ export class Game {
   team: (string | null)[] = ['knight-of-new-benalia', 'academy-journeymage', 'cabal-evangel', 'skirk-prospector', 'llanowar-elves'];
   cooldowns: number[] = [0, 0, 0, 0, 0];
   artifactCooldowns: number[] = [0, 0, 0, 0, 0];
-  artifacts: (string | null)[] = ['adaptive-omnitool', null, null, null, null];
-  enchantments: (string | null)[] = ['mirari-s-wake', null, null, null, null];
+  artifacts: (string | null)[] = [null, null, null, null, null];
+  enchantments: (string | null)[] = [null, null, null, null, null];
   currentEnemies: string[] = [];
   shopContent: ShopContent = {};
 

@@ -22,6 +22,7 @@ export class LlanowarElves extends Creature {
 
   pool = {
     'dominaria': Rarity.COMMON,
+    'llanowar': Rarity.COMMON,
   };
 
   enemyEffects = [affinityEffects.greenAffinity];

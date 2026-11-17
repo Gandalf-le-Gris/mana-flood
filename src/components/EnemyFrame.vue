@@ -2,7 +2,7 @@
   <div>
     <div
       class="frame"
-      :class="{dead: enemy.hp <= 0}"
+      :class="{dead: enemy.hp <= 0, boss: isBoss }"
       @click.right="showDetail = true"
     >
       <v-img
@@ -18,7 +18,7 @@
       </h1>
       <div class="text">
         <h2 class="beleren-small-caps text-center">{{ $t(`creatures.name.${enemy.name}`) }}</h2>
-        <div class="d-flex justify-space-between mx-5 mt-n6">
+        <div class="d-flex justify-space-between mx-5 mt-n7">
           <h2 class="d-flex">
             {{ CreatureUtils.getEnemyDamage(enemy, game) }}
             <v-icon
@@ -50,6 +50,16 @@
         />
         <span class="beleren">{{ priority + 1 }}</span>
       </div>
+      <div
+        v-if="isBoss"
+        class="boss-icon"
+      >
+        <v-icon
+          icon="mtg:boss"
+          :color="skullColor"
+          size="40"
+        />
+      </div>
     </div>
     <character-detail-dialog
       v-model="showDetail"
@@ -77,9 +87,31 @@ const showDetail: Ref<boolean> = ref(false);
 
 const game: Game = useGameStore().current!;
 
+const isBoss = computed(() => CreatureUtils.isBoss(props.enemy));
 const width = computed(() => '250px');
 const height = computed(() => '370px');
-const frameColor = computed(() => `rgb(var(--v-theme-${props.enemy.colors[0]}))`)
+const frameColor = computed(() => {
+  switch (props.enemy.colors.length) {
+    case 0:
+      return 'rgb(var(--v-theme-C))';
+    case 1:
+      return `rgb(var(--v-theme-${props.enemy?.colors[0]}))`;
+    case 2:
+      return `linear-gradient(90deg, rgb(var(--v-theme-${props.enemy?.colors[0]})) 0%, rgb(var(--v-theme-${props.enemy?.colors[0]})) 35%, rgb(var(--v-theme-${props.enemy?.colors[1]})) 65%, rgb(var(--v-theme-${props.enemy?.colors[1]})) 100%)`;
+    default:
+      return 'rgb(var(--v-theme-WUBRG))';
+  }
+});
+const skullColor = computed(() => {
+  switch (props.enemy.colors.length) {
+    case 0:
+      return 'rgb(var(--v-theme-C-light))';
+    case 1:
+      return `rgb(var(--v-theme-${props.enemy?.colors[0]}-light))`;
+    default:
+      return 'rgb(var(--v-theme-WUBRG-light))'
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -96,7 +128,7 @@ const frameColor = computed(() => `rgb(var(--v-theme-${props.enemy.colors[0]}))`
     right: 0;
     bottom: 0;
     content: '';
-    background-color: v-bind('frameColor');
+    background: v-bind('frameColor');
     -webkit-mask-image: url('/ui/enemy-frame.png');
     mask-image: url('/ui/enemy-frame.png');
     mask-size: cover;
@@ -124,6 +156,11 @@ const frameColor = computed(() => `rgb(var(--v-theme-${props.enemy.colors[0]}))`
   &.dead {
     pointer-events: none;
     filter: grayscale(1) brightness(.5);
+  }
+
+  &.boss {
+    transform: scale(1.1);
+    margin: 0 16px;
   }
 }
 
@@ -172,5 +209,13 @@ const frameColor = computed(() => `rgb(var(--v-theme-${props.enemy.colors[0]}))`
     font-weight: bold;
     text-shadow: red 0 0 2px, red 0 0 2px, red 0 0 2px, red 0 0 2px, red 0 0 2px, red 0 0 2px, red 0 0 2px, red 0 0 2px;
   }
+}
+
+.boss-icon {
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
 }
 </style>

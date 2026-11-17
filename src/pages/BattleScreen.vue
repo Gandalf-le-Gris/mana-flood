@@ -1,19 +1,26 @@
 <template>
   <div class="background">
+    <transition name="bg-fade">
+      <div
+        :key="game.plane"
+        class="bg-layer"
+        :style="{ backgroundImage }"
+      />
+    </transition>
     <div class="general-info beleren-small-caps">
       {{ $t(`planes.name.${buildPlane(game.plane).name}`) }} - {{ game.floor }}
     </div>
     <battle-info
       ref="battleInfo"
       class="battle-info"
-      :class="{hidden: shopOpen}"
+      :class="{hidden: shopOpen || planesOpen}"
       @check-victory="checkBattleEnd"
       @battle-end="openShop"
     />
     <mana-board
       ref="manaBoard"
       class="mana-board"
-      :class="{hidden: shopOpen}"
+      :class="{hidden: shopOpen || planesOpen}"
       :disabled="isBattleEnding"
       @match="processMatch"
       @turn-end="onTurnEnd"
@@ -30,6 +37,10 @@
       class="team-button"
       :class="{hidden: !shopOpen}"
       @click="teamOpen = true"
+    />
+    <plane-selector
+      v-if="planesOpen"
+      @select="moveToPlane"
     />
     <team-detail-dialog v-model="teamOpen" />
   </div>
@@ -50,10 +61,15 @@ import IconButton from '@/components/IconButton.vue';
 import type { BattleContext } from '@/types/BattleContext';
 import { sleep } from '@/utils/TsUtils';
 import type { Effect } from '@/types/effects/Effect';
+import PlaneSelector from '@/components/PlaneSelector.vue';
+import { ScreenTransition } from '@/utils/ScreenTransition';
 
-const game = useGameStore().current!;
+const game: Game = useGameStore().current!;
 const shopOpen = ref<boolean>(false);
 const teamOpen = ref<boolean>(false);
+const planesOpen = ref<boolean>(false);
+
+const emits = defineEmits(['move-to-screen']);
 
 const battleInfo = ref<InstanceType<typeof BattleInfo> | null>(null);
 const manaBoard = ref<InstanceType<typeof ManaBoard> | null>(null);
@@ -148,26 +164,48 @@ function openShop() {
 function commitFloor() {
   shopOpen.value = false;
   isBattleEnding.value = false;
+  if (game.floor % 10 !== 0) {
+    GameUtils.nextFloor(game);
+    useGameStore().saveGame();
+  } else {
+    planesOpen.value = true;
+  }
+}
+
+function moveToPlane(plane: string) {
+  game.plane = plane;
   GameUtils.nextFloor(game);
   useGameStore().saveGame();
+  battleContext.healTeam(GameUtils.getTotalHp(game));
+  planesOpen.value = false;
 }
 </script>
 
 <style lang="scss" scoped>
 .background {
   position: relative;
+  overflow: hidden;
 
-  &::before {
+  .bg-layer {
+    position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    content: '';
-    position: absolute;
-    background-image: v-bind('backgroundImage');
     background-size: cover;
     background-repeat: no-repeat;
+    pointer-events: none;
   }
+}
+
+.bg-fade-enter-active,
+.bg-fade-leave-active {
+  transition: opacity .75s ease-in-out;
+}
+
+.bg-fade-enter-from,
+.bg-fade-leave-to {
+  opacity: 0;
 }
 
 .general-info {

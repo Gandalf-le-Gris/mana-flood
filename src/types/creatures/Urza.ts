@@ -28,4 +28,6 @@ export class Urza extends Creature {
   teamEffects = [artifactRechargeEffect];
   enemyEffects = [artifactLockEffect];
   activatedAbility = lordHighArtificerEffect;
+
+  summons = ['karnstruct', 'karnstruct'];
 }
