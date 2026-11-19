@@ -1,10 +1,13 @@
 import { Dominaria } from "./Dominaria";
 import { Llanowar } from './Llanowar';
+import { MeditationRealm } from './MeditationRealm';
 import type { Plane } from "./Plane";
 import { Ravnica } from './Ravnica';
 import { Zendikar } from './Zendikar';
 
 export const planes: typeof Plane[] = [
+  MeditationRealm,
+
   Dominaria,
   Llanowar,
 

@@ -31,3 +31,9 @@ export function swap<T>(array: T[], i: number, j: number) {
   const [t]: T[] = array.splice(a, 1, array[b]);
   array.splice(b, 1, t);
 }
+
+export function insertUnique<T>(array: T[], value: T) {
+  if (!array.includes(value)) {
+    array.push(value);
+  }
+}

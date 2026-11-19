@@ -40,9 +40,29 @@
     />
     <plane-selector
       v-if="planesOpen"
+      :fade-in="game.floor > 0"
       @select="moveToPlane"
     />
+    <icon-button
+      icon="mdi-location-exit"
+      size="60"
+      variant="hexa"
+      class="exit-button"
+      @click="emits('move-to-screen', 'TitleScreen', ScreenTransition.FadeToBlack)"
+    />
+    <icon-button
+      icon="mdi-cog"
+      size="60"
+      variant="hexa"
+      class="settings-button"
+    />
     <team-detail-dialog v-model="teamOpen" />
+    <result-dialog
+      v-model="resultsOpen"
+      :defeat
+      @leave="emits('move-to-screen', 'TitleScreen', ScreenTransition.FadeToBlack)"
+      @continue="openShop"
+    />
   </div>
 </template>
 
@@ -55,7 +75,7 @@ import type { ExtendedColor } from '@/types/Color';
 import { Game } from '@/types/Game';
 import { buildPlane } from '@/types/planes/planes';
 import { GameUtils } from '@/utils/GameUtils';
-import { computed, provide, ref } from 'vue';
+import { computed, onMounted, provide, ref, watch } from 'vue';
 import TeamDetailDialog from '@/components/TeamDetailDialog.vue';
 import IconButton from '@/components/IconButton.vue';
 import type { BattleContext } from '@/types/BattleContext';
@@ -63,11 +83,16 @@ import { sleep } from '@/utils/TsUtils';
 import type { Effect } from '@/types/effects/Effect';
 import PlaneSelector from '@/components/PlaneSelector.vue';
 import { ScreenTransition } from '@/utils/ScreenTransition';
+import ResultDialog from '@/components/ResultDialog.vue';
+import { useUnlockStore } from '@/stores/unlocksStore';
+import { insertUnique } from '@/utils/ArrayUtils';
 
 const game: Game = useGameStore().current!;
 const shopOpen = ref<boolean>(false);
 const teamOpen = ref<boolean>(false);
 const planesOpen = ref<boolean>(false);
+const resultsOpen = ref<boolean>(false);
+const defeat = ref<boolean>(false);
 
 const emits = defineEmits(['move-to-screen']);
 
@@ -85,7 +110,11 @@ async function checkBattleEnd() {
   if (allEnemiesDead && !boardBusy) {
     isBattleEnding.value = true;
     await sleep(1000);
-    openShop();
+    if (game.floor === GameUtils.FINAL_FLOOR) {
+      resultsOpen.value = true;
+    } else {
+      openShop();
+    }
   }
 }
 
@@ -161,24 +190,43 @@ function openShop() {
   shopOpen.value = true;
 }
 
-function commitFloor() {
+async function commitFloor() {
   shopOpen.value = false;
   isBattleEnding.value = false;
   if (game.floor % 10 !== 0) {
-    GameUtils.nextFloor(game);
+    await GameUtils.nextFloor(game);
     useGameStore().saveGame();
+    useUnlockStore().persist();
   } else {
     planesOpen.value = true;
   }
 }
 
-function moveToPlane(plane: string) {
+async function moveToPlane(plane: string) {
   game.plane = plane;
-  GameUtils.nextFloor(game);
+  insertUnique(useUnlockStore().get.planes, plane);
+  await GameUtils.nextFloor(game);
   useGameStore().saveGame();
+  useUnlockStore().persist();
   battleContext.healTeam(GameUtils.getTotalHp(game));
   planesOpen.value = false;
 }
+
+watch(() => game.hp, (hp) => {
+  if (hp <= 0 && !isBattleEnding.value) {
+    isBattleEnding.value = true;
+    defeat.value = true;
+    setTimeout(() => {
+      resultsOpen.value = true;
+    }, 1000);
+  }
+});
+
+onMounted(() => {
+  if (game.floor === 0) {
+    planesOpen.value = true;
+  }
+});
 </script>
 
 <style lang="scss" scoped>
@@ -261,5 +309,17 @@ function moveToPlane(plane: string) {
   &.hidden {
     bottom: -10%;
   }
+}
+
+.exit-button {
+  position: absolute;
+  top: 20px;
+  right: 16px;
+}
+
+.settings-button {
+  position: absolute;
+  top: 20px;
+  right: 90px;
 }
 </style>

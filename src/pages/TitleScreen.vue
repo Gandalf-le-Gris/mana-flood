@@ -5,25 +5,25 @@
     </div>
     <div class="options">
       <button class="beleren-small-caps">
-       {{ $t('title.options.achievements') }}
+        {{ $t('title.options.achievements') }}
       </button>
       <button class="beleren-small-caps">
-       {{ $t('title.options.codex') }}
+        {{ $t('title.options.codex') }}
       </button>
       <button
         class="main beleren-small-caps"
         @click="newGame"
       >
-       {{ $t('title.options.play') }}
+        {{ $t('title.options.play') }}
       </button>
       <button
         class="beleren-small-caps"
         :class="{ disabled: !gameStore.current }"
       >
-       {{ $t('title.options.load') }}
+        {{ $t('title.options.load') }}
       </button>
       <button class="beleren-small-caps">
-       {{ $t('title.options.settings') }}
+        {{ $t('title.options.settings') }}
       </button>
     </div>
   </div>
@@ -31,14 +31,19 @@
 
 <script setup lang="ts">
 import { useGameStore } from '@/stores/gameStore';
+import { useUnlockStore } from '@/stores/unlocksStore';
 import { ScreenTransition } from '@/utils/ScreenTransition';
 
 const gameStore = useGameStore();
 const emit = defineEmits(['move-to-screen']);
 
 function newGame() {
-  gameStore.newGame();
-  emit('move-to-screen', 'BattleScreen', ScreenTransition.FadeToBlack)
+  if (useUnlockStore().get.creatures.length > 5) {
+    emit('move-to-screen', 'TeamSelector', ScreenTransition.FadeToBlack);
+  } else {
+    gameStore.newGame();
+    emit('move-to-screen', 'BattleScreen', ScreenTransition.FadeToBlack);
+  }
 }
 </script>
 

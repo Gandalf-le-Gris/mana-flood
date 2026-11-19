@@ -16,8 +16,8 @@ export class Urza extends Creature {
     W: 5,
     U: 10,
     B: 3,
-    R: 2,
-    G: 2,
+    R: 1,
+    G: 1,
     C: 10,
   };
 

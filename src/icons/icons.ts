@@ -127,7 +127,10 @@ export function iconExists(icon: string) {
 }
 
 const mtg: IconSet = {
-  component: (props: IconProps) => h(props.tag, [h(customSvgNameToComponent[props.icon as string], { class: 'v-icon__svg' })])
+  component: (props: IconProps, { attrs }) =>  
+    h(props.tag, attrs, [ 
+      h(customSvgNameToComponent[props.icon as string], { class: 'v-icon__svg' }) 
+    ])
 };
 
 export { mtg };

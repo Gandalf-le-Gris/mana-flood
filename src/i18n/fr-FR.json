@@ -32,7 +32,8 @@
       "academy-journeymage": "Mage compagnon de l'Académie",
       "cabal-evangel": "Prédicatrice de la Coterie",
       "urza": "Urza",
-      "karnstruct": "Construction"
+      "karnstruct": "Construction",
+      "cityscape-leveler": "Lisseur de métropole"
     }
   },
   "artifacts": {
@@ -50,6 +51,7 @@
   "planes": {
     "next": "Choisissez votre prochaine destination",
     "name": {
+      "meditation-realm": "Royaume de la méditation",
       "dominaria": "Dominaria",
       "llanowar": "Llanowar",
       "ravnica": "Ravnica",
@@ -179,6 +181,21 @@
       "sacrifice": "Convertit 10 orbes aléatoires en orbes noirs au prix de 75 PV.",
       "major-sacrifice": "Convertit 15 orbes aléatoires en orbes noirs au prix de 100 PV.",
       "lord-high-artificer": "Réinitialise les temps de recharge de tous les artefacts."
+    }
+  },
+  "results": {
+    "defeat": "Défaite...",
+    "victory": "Victoire !",
+    "floor-reached": "Étage atteint : {0}",
+    "continue": "Mode infini",
+    "leave": "Quitter"
+  },
+  "team-selector": {
+    "name": "Nom",
+    "sort": {
+      "title": "Tri",
+      "name": "Nom",
+      "cost": "Coût"
     }
   }
 }

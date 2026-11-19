@@ -129,10 +129,11 @@ import { buildCreature } from '@/types/creatures/creatures';
 import type { Game } from '@/types/Game';
 import { computed, ref, type ComputedRef, type Ref } from 'vue';
 import ArrowButton from './ArrowButton.vue';
-import { swap } from '@/utils/ArrayUtils.ts';
+import { insertUnique, swap } from '@/utils/ArrayUtils.ts';
 import IconButton from './IconButton.vue';
 import type { Enchantment } from '@/types/enchantments/Enchantment.ts';
 import { buildEnchantment } from '@/types/enchantments/enchantments.ts';
+import { useUnlockStore, type Unlocks } from '@/stores/unlocksStore.ts';
 
 const show = defineModel({ type: Boolean, required: true });
 
@@ -152,6 +153,7 @@ const baseWidth: Ref<number> = ref(1100);
 const extraWidth: Ref<number> = ref(350);
 
 const game: Game = useGameStore().current!;
+const unlocks: Unlocks = useUnlockStore().get;
 const team = computed<(Creature | null)[]>(() => game.team.map(c => c ? buildCreature(c) : null));
 const artifacts = computed<(Artifact | null)[]>(() => game.artifacts.map(c => c ? buildArtifact(c) : null));
 const enchantments = computed<(Enchantment | null)[]>(() => game.enchantments.map(c => c ? buildEnchantment(c) : null));
@@ -159,6 +161,7 @@ const enchantments = computed<(Enchantment | null)[]>(() => game.enchantments.ma
 function insertCreature(index: number) {
   if (props.creature) {
     game.team.splice(index, 1, props.creature.name);
+    insertUnique(unlocks.creatures, props.creature.name);
     if (game.cooldowns) {
       game.cooldowns[index] = 0;
     }
@@ -169,6 +172,7 @@ function insertCreature(index: number) {
 function insertArtifact(index: number) {
   if (props.artifact) {
     game.artifacts.splice(index, 1, props.artifact.name);
+    insertUnique(unlocks.artifacts, props.artifact.name);
     if (game.artifactCooldowns) {
       game.artifactCooldowns[index] = 0;
     }
@@ -179,6 +183,7 @@ function insertArtifact(index: number) {
 function insertEnchantment(index: number) {
   if (props.enchantment) {
     game.enchantments.splice(index, 1, props.enchantment.name);
+    insertUnique(unlocks.enchantments, props.enchantment.name);
     emits('edited');
   }
 }

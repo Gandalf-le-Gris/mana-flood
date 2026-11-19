@@ -1,5 +1,8 @@
 <template>
-  <div class="wrapper d-flex flex-column ga-8">
+  <div
+    class="wrapper d-flex flex-column ga-8"
+    :class="{ 'fade-in': fadeIn }"
+  >
     <h1
       class="text-center beleren-small-caps text-shadow"
       style="font-size: 3em;"
@@ -26,15 +29,24 @@ import type { Game } from '@/types/Game';
 import type { Plane } from '@/types/planes/Plane';
 import { buildPlane, planes } from '@/types/planes/planes';
 import { choice, shuffleCopy } from '@/utils/ArrayUtils';
-import type { ComputedRef } from 'vue';
-import { computed } from 'vue';
+import { ref, type Ref } from 'vue';
 import PlanePortal from './PlanePortal.vue';
+
+const props = withDefaults(defineProps<{
+  fadeIn?: boolean,
+}>(), {
+  fadeIn: true,
+});
 
 const game: Game = useGameStore().current!;
 
 const emits = defineEmits(['select']);
 
-const options: ComputedRef<Plane[]> = computed(() => {
+const selecting: Ref<boolean> = ref(false);
+
+const options: Ref<Plane[]> = ref(getOptions());
+
+function getOptions(): Plane[] {
   const leadsTo: string[] = shuffleCopy(buildPlane(game.plane).leadsTo);
   const res = [getFromLeadsTo([], leadsTo)];
   if (Math.random() < .5) {
@@ -57,12 +69,14 @@ const options: ComputedRef<Plane[]> = computed(() => {
     let p: Plane;
     do {
       p = new (choice(planes))();
-    } while (res.find(plane => plane.name === p.name) || leadsTo.includes(p.name) || game.plane === p.name);
+    } while (res.find(plane => plane.name === p.name) || leadsTo.includes(p.name) || game.plane === p.name || p.name === 'meditation-realm');
     return p;
   }
-});
+}
 
 function selectPlane(plane: string) {
+  if (selecting.value) return;
+  selecting.value = true;
   emits('select', plane);
 }
 </script>
@@ -73,9 +87,12 @@ function selectPlane(plane: string) {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  opacity: 0;
-  animation: fade-in-delayed 2s ease-out forwards;
   max-width: 1500px;
+  
+  &.fade-in {
+    opacity: 0;
+    animation: fade-in-delayed 2s ease-out forwards;
+  }
 }
 
 @keyframes fade-in-delayed {

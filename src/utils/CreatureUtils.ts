@@ -55,6 +55,10 @@ export class CreatureUtils {
     return Object.values(creature.pool).includes(Rarity.BOSS);
   }
 
+  static getRarity(creature: Creature): Rarity {
+    return Object.values(creature.pool).reduce((acc, x) => x > acc ? x : acc, Rarity.BOSS);
+  }
+
   static visualDamage(damage: number, color: ExtendedColor, el: HTMLElement) {
     const floatingDiv = document.createElement('div');
     Object.assign(floatingDiv.style, {

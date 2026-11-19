@@ -8,6 +8,12 @@ export interface SaveData {
   games: Game[],
 }
 
+export interface NewGameOptions {
+  team?: (string | null)[];
+  plane?: string;
+  floor?: number;
+}
+
 const DEFAULT_STATE: SaveData = {
   games: [],
 };
@@ -40,12 +46,23 @@ export const useGameStore = defineStore(NAME, {
       }
       this.persist();
     },
-    newGame() {
+    newGame(options?: NewGameOptions) {
       this.games = this.games.map((e: Game) => ({
         ...e,
         current: false,
       }));
       const newGame: Game = new Game();
+      if (options?.team) {
+        newGame.team = options.team;
+      }
+      if (options?.plane) {
+        newGame.plane = options.plane;
+      }
+      if (options?.floor !== undefined) {
+        newGame.floor = options.floor;
+      } else {
+        newGame.floor = 1;
+      }
       GameUtils.initGame(newGame);
       this.games.push(newGame);
       this.saveGame();

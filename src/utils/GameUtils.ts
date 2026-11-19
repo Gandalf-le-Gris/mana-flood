@@ -14,13 +14,23 @@ interface MatchGroup {
 }
 
 export class GameUtils {
+  static FINAL_FLOOR: number = 100;
+
   static initGame(game: Game) {
     game.hp = GameUtils.getTotalHp(game);
     game.cooldowns = [0, 0, 0, 0, 0];
-    GameUtils.nextFloor(game);
+    game.artifactCooldowns = [0, 0, 0, 0, 0];
+
+    if (game.floor === 0) {
+      game.currentEnemies = [];
+      game.shopContent = {};
+    } else {
+      game.floor = 0;
+      GameUtils.populateFloor(game);
+    }
   }
 
-  static async nextFloor(game: Game) {
+  static populateFloor(game: Game) {
     if (game.floor % 10 !== 9) {
       game.currentEnemies = Array.from(
         { length: 1 + Number(game.floor % 10 > 2) + Number(game.floor % 10 > 5) },
@@ -32,10 +42,14 @@ export class GameUtils {
       enemies.splice(Math.floor(enemies.length / 2), 0, boss);
       game.currentEnemies = enemies;
     }
-    await sleep(500);
     game.shopContent = ShopUtils.getShop(game);
     game.hp = Math.min(game.hp, GameUtils.getTotalHp(game));
     game.floor++;
+  }
+
+  static async nextFloor(game: Game) {
+    await sleep(500);
+    GameUtils.populateFloor(game);
   }
 
   static getTotalHp(game: Game) {

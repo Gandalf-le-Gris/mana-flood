@@ -29,6 +29,17 @@
         />
         <span>{{ cooldown }}</span>
       </div>
+      <div
+        v-if="cost"
+        class="cooldown-corner-badge"
+      >
+        <v-icon
+          icon="mdi-lightning-bolt"
+          :size="badgeIconSize"
+          class="mr-1 ml-n1"
+        />
+        <span>{{ cost }}</span>
+      </div>
     </div>
     <character-detail-dialog
       v-if="character"
@@ -48,6 +59,7 @@ const props = withDefaults(defineProps<{
   size?: number,
   cooldown?: number,
   isReady?: boolean,
+  cost?: number,
 }>(), {
   size: 150,
   cooldown: undefined,

@@ -84,21 +84,21 @@
 </template>
 
 <script setup lang="ts">
+import { useGameStore } from '@/stores/gameStore';
+import type { Game } from '@/types/Game';
+import type { Artifact } from '@/types/artifacts/Artifact.ts';
+import { buildArtifact } from '@/types/artifacts/artifacts';
+import type { Creature } from '@/types/creatures/Creature.ts';
 import { buildCreature } from '@/types/creatures/creatures';
+import type { Enchantment } from '@/types/enchantments/Enchantment.ts';
+import { buildEnchantment } from '@/types/enchantments/enchantments.ts';
+import { GameUtils } from '@/utils/GameUtils.ts';
+import { ref, type Ref } from 'vue';
 import ArtifactPortrait from './ArtifactPortrait.vue';
 import CharacterPortrait from './CharacterPortrait.vue';
 import EnchantmentPortrait from './EnchantmentPortrait.vue';
-import UiCard from './UiCard.vue';
-import { useGameStore } from '@/stores/gameStore';
-import type { Game } from '@/types/Game';
-import { buildArtifact } from '@/types/artifacts/artifacts';
-import { GameUtils } from '@/utils/GameUtils.ts';
-import { ref, type Ref } from 'vue';
-import type { Creature } from '@/types/creatures/Creature.ts';
-import type { Artifact } from '@/types/artifacts/Artifact.ts';
 import TeamDetailDialog from './TeamDetailDialog.vue';
-import { buildEnchantment } from '@/types/enchantments/enchantments.ts';
-import type { Enchantment } from '@/types/enchantments/Enchantment.ts';
+import UiCard from './UiCard.vue';
 
 const game: Game = useGameStore().current!;
 

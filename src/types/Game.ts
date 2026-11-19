@@ -1,3 +1,5 @@
+import { baseCreatures, basePlanes } from '@/stores/unlocksStore';
+
 export interface ShopContent {
   creature?: string,
   artifact?: string,
@@ -10,8 +12,8 @@ export class Game {
   current: boolean = true;
 
   floor: number = 0;
-  plane: string = 'dominaria';
-  team: (string | null)[] = ['knight-of-new-benalia', 'academy-journeymage', 'cabal-evangel', 'skirk-prospector', 'llanowar-elves'];
+  plane: string = basePlanes[0];
+  team: (string | null)[] = baseCreatures;
   cooldowns: number[] = [0, 0, 0, 0, 0];
   artifactCooldowns: number[] = [0, 0, 0, 0, 0];
   artifacts: (string | null)[] = [null, null, null, null, null];
