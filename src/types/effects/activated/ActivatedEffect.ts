@@ -1,5 +1,5 @@
 import { Effect } from '../Effect';
-import { EffectTrigger } from '../EffectCondition';
+import { EffectTrigger } from '../EffectTrigger';
 import type { BattleContext } from '../../BattleContext';
 import type { Game } from '@/types/Game';
 

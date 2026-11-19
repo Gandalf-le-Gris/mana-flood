@@ -9,7 +9,7 @@ export class CreatureUtils {
     return shuffle(
       creatures
       .map(c => new c())
-      .map(c => Array.from({ length: Number(c.pool[plane] ?? c.pool['any'] ?? 0) }, () => structuredClone(c)))
+      .map(c => Array.from({ length: Number(c.pool[plane] ?? c.pool['any'] ?? 0) }, () => c))
       .flat()
     )[0]?.name ?? 'llanowar-elves';
   }

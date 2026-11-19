@@ -1,7 +1,7 @@
 import type { MatchGroup } from '@/pages/BattleScreen.vue';
 import type { BattleContext } from '@/types/BattleContext';
 import { Effect } from '../Effect';
-import { EffectTrigger } from '../EffectCondition';
+import { EffectTrigger } from '../EffectTrigger';
 
 class ArtifactRechargeEffect extends Effect {
   id = 'team.artifact-recharge';

@@ -71,6 +71,7 @@ import type { BattleContext } from '@/types/BattleContext';
 import { buildEnchantment } from '@/types/enchantments/enchantments.ts';
 import type { Enchantment } from '@/types/enchantments/Enchantment.ts';
 import { GameUtils } from '@/utils/GameUtils.ts';
+import { EffectTrigger } from '@/types/effects/EffectTrigger.ts';
 
 const game: Game = useGameStore().current!;
 const battleContext = inject<BattleContext | null>('battleContext', null);
@@ -101,6 +102,12 @@ function onTurnEnd() {
       if (game.artifactCooldowns[i] > 0) {
         game.artifactCooldowns[i]--;
       }
+    }
+  }
+
+  for (const effect of GameUtils.getActiveEffects(game)) {
+    if (battleContext && effect.trigger === EffectTrigger.TURN_START && effect.effect) {
+      effect.effect(battleContext);
     }
   }
 }

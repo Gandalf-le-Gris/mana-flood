@@ -1,6 +1,6 @@
 import type { Color } from "../Color";
 import { destructionEffects } from '../effects/activated/DestructionEffects';
-import { affinityEffects } from '../effects/shared/AffinityEffects';
+import { turnStartDestructionEffects } from '../effects/shared/TurnEndDestructionEffects';
 import { Creature, Rarity } from "./Creature";
 
 export class CityscapeLeveler extends Creature {
@@ -24,7 +24,7 @@ export class CityscapeLeveler extends Creature {
     'dominaria': Rarity.RARE,
   };
 
-  enemyEffects = [affinityEffects.colorlessGreaterAffinity];
-  teamEffects = [affinityEffects.colorlessGreaterAffinity];
+  enemyEffects = [turnStartDestructionEffects.majorColorlessDestruction];
+  teamEffects = [turnStartDestructionEffects.majorColorlessDestruction];
   activatedAbility = destructionEffects.majorColorlessDestruction;
 }

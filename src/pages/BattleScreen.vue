@@ -68,24 +68,24 @@
 
 <script setup lang="ts">
 import BattleInfo from '@/components/BattleInfo.vue';
-import ManaBoard from '@/components/ManaBoard.vue';
 import BattleShop from '@/components/BattleShop.vue';
+import IconButton from '@/components/IconButton.vue';
+import ManaBoard from '@/components/ManaBoard.vue';
+import PlaneSelector from '@/components/PlaneSelector.vue';
+import ResultDialog from '@/components/ResultDialog.vue';
+import TeamDetailDialog from '@/components/TeamDetailDialog.vue';
 import { useGameStore } from '@/stores/gameStore';
+import { useUnlockStore } from '@/stores/unlocksStore';
+import type { BattleContext } from '@/types/BattleContext';
 import type { ExtendedColor } from '@/types/Color';
+import type { Effect } from '@/types/effects/Effect';
 import { Game } from '@/types/Game';
 import { buildPlane } from '@/types/planes/planes';
-import { GameUtils } from '@/utils/GameUtils';
-import { computed, onMounted, provide, ref, watch } from 'vue';
-import TeamDetailDialog from '@/components/TeamDetailDialog.vue';
-import IconButton from '@/components/IconButton.vue';
-import type { BattleContext } from '@/types/BattleContext';
-import { sleep } from '@/utils/TsUtils';
-import type { Effect } from '@/types/effects/Effect';
-import PlaneSelector from '@/components/PlaneSelector.vue';
-import { ScreenTransition } from '@/utils/ScreenTransition';
-import ResultDialog from '@/components/ResultDialog.vue';
-import { useUnlockStore } from '@/stores/unlocksStore';
 import { insertUnique } from '@/utils/ArrayUtils';
+import { GameUtils } from '@/utils/GameUtils';
+import { ScreenTransition } from '@/utils/ScreenTransition';
+import { sleep } from '@/utils/TsUtils';
+import { computed, onMounted, provide, ref, watch } from 'vue';
 
 const game: Game = useGameStore().current!;
 const shopOpen = ref<boolean>(false);

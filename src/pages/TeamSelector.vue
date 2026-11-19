@@ -250,7 +250,7 @@ function startGame() {
   if (!team.value.find(x => x) || totalCost.value > 10) return;
 
   const chosenTeam = team.value.map(c => c?.name ?? null);
-  unlocks.lastTeam = chosenTeam;
+  unlocks.lastTeam = [...chosenTeam];
   useUnlockStore().persist();
 
   const hasPlanesChoice = unlocks.planes.filter(p => p !== 'meditation-realm').length >= 3;

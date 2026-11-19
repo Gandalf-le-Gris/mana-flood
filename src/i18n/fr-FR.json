@@ -80,7 +80,19 @@
       "red-hatred": "Réduit la fréquence des orbes rouges.",
       "green-hatred": "Réduit la fréquence des orbes verts.",
       "colorless-hatred": "Réduit la fréquence des orbes incolores.",
-      "enhanced-conversion": "Convertit 1 orbe supplémentaire lorsqu'au moins 3 orbes sont convertis à la fois."
+      "enhanced-conversion": "Convertit 1 orbe supplémentaire lorsqu'au moins 3 orbes sont convertis à la fois.",
+      "turn-end-destruction-white": "À la fin de chaque tour, détruit 2 orbes aléatoires non-blancs.",
+      "turn-end-destruction-blue": "À la fin de chaque tour, détruit 2 orbes aléatoires non-bleus.",
+      "turn-end-destruction-black": "À la fin de chaque tour, détruit 2 orbes aléatoires non-noirs.",
+      "turn-end-destruction-red": "À la fin de chaque tour, détruit 2 orbes aléatoires non-rouges.",
+      "turn-end-destruction-green": "À la fin de chaque tour, détruit 2 orbes aléatoires non-verts.",
+      "turn-end-destruction-colorless": "À la fin de chaque tour, détruit 2 orbes aléatoires non-incolores.",
+      "turn-end-major-destruction-white": "À la fin de chaque tour, détruit 4 orbes aléatoires non-blancs.",
+      "turn-end-major-destruction-blue": "À la fin de chaque tour, détruit 4 orbes aléatoires non-bleus.",
+      "turn-end-major-destruction-black": "À la fin de chaque tour, détruit 4 orbes aléatoires non-noirs.",
+      "turn-end-major-destruction-red": "À la fin de chaque tour, détruit 4 orbes aléatoires non-rouges.",
+      "turn-end-major-destruction-green": "À la fin de chaque tour, détruit 4 orbes aléatoires non-verts.",
+      "turn-end-major-destruction-colorless": "À la fin de chaque tour, détruit 4 orbes aléatoires non-incolores."
     },
     "enemy": {
       "artifact-lock": "Les capacités des artefacts ne peuvent pas être activées."

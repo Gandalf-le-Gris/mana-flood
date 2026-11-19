@@ -3,4 +3,5 @@ export enum EffectTrigger {
   TRIGGER,
   ORB_RATE,
   MATCH,
+  TURN_START,
 }

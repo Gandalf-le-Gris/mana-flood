@@ -1,7 +1,7 @@
 import type { Color } from "../Color";
 import { lordHighArtificerEffect } from '../effects/activated/LordHighArtificerEffect';
 import { artifactLockEffect } from '../effects/enemy/ArtifactLockEffect';
-import { artifactRechargeEffect } from '../effects/team/ArtifactRecharge';
+import { artifactRechargeEffect } from '../effects/team/ArtifactRechargeEffect';
 import { Creature, Rarity } from "./Creature";
 
 export class Urza extends Creature {
