@@ -4,32 +4,34 @@
       Mana Flood
     </div>
     <div class="options">
-      <button class="beleren-small-caps">
-        {{ $t('title.options.achievements') }}
-      </button>
-      <button class="beleren-small-caps">
-        {{ $t('title.options.codex') }}
-      </button>
-      <button
-        class="main beleren-small-caps"
+      <text-button
+        :text="$t('title.options.achievements')"
+        :size="80"
+      />
+      <text-button
+        :text="$t('title.options.codex')"
+        :size="80"
+      />
+      <text-button
+        :text="$t('title.options.play')"
+        :size="150"
         @click="newGame"
-      >
-        {{ $t('title.options.play') }}
-      </button>
-      <button
-        class="beleren-small-caps"
-        :class="{ disabled: !gameStore.current }"
-      >
-        {{ $t('title.options.load') }}
-      </button>
-      <button class="beleren-small-caps">
-        {{ $t('title.options.settings') }}
-      </button>
+      />
+      <text-button
+        :text="$t('title.options.load')"
+        :size="80"
+        :disabled="!gameStore.current"
+      />
+      <text-button
+        :text="$t('title.options.settings')"
+        :size="80"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import TextButton from '@/components/TextButton.vue';
 import { useGameStore } from '@/stores/gameStore';
 import { useUnlockStore } from '@/stores/unlocksStore';
 import { ScreenTransition } from '@/utils/ScreenTransition';
@@ -70,33 +72,11 @@ function newGame() {
   left: 50%;
   transform: translateX(-50%);
   display: grid;
-  grid-template-columns: 300px 300px 400px 300px 300px;
+  grid-template-columns: 300px 300px 500px 300px 300px;
   gap: 48px;
 
-  > button {
-    font-size: 3rem;
-    background: #000a;
-    padding: 12px 24px;
-    border-radius: 24px 24px 0px 0;
-    height: fit-content;
-    margin-top: auto;
-    transition: all .2s;
-
-    &.main {
-      font-size: 5rem;
-      padding: 20px 40px;
-      border-radius: 40px 40px 0px 0;
-    }
-
-    &:hover {
-      background: #000;
-      transform: scale(1.1);
-    }
-
-    &.disabled {
-      pointer-events: none;
-      opacity: .5;
-    }
+  > * {
+    margin: auto auto 20px auto;
   }
 }
 
