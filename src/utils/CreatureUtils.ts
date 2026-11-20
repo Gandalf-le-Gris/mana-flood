@@ -2,16 +2,12 @@ import type { ExtendedColor } from "@/types/Color";
 import { Creature, Rarity } from "@/types/creatures/Creature";
 import { buildCreature, creatures } from "@/types/creatures/creatures";
 import { shuffle } from "./ArrayUtils";
+import { PoolUtils } from "./PoolUtils";
 import type { Game } from '@/types/Game';
 
 export class CreatureUtils {
-  static getRandomCreature(plane: string): string {
-    return shuffle(
-      creatures
-      .map(c => new c())
-      .map(c => Array.from({ length: Number(c.pool[plane] ?? c.pool['any'] ?? 0) }, () => c))
-      .flat()
-    )[0]?.name ?? 'llanowar-elves';
+  static getRandomCreature(plane: string, rarity?: Rarity | number): string {
+    return PoolUtils.getRandomItem(creatures, plane, rarity, 'llanowar-elves');
   }
 
   static getRandomBoss(plane: string): string {

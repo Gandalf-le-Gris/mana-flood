@@ -84,6 +84,7 @@
           :character="(creature as Creature)"
           :size="160"
           :cost="creature.cost"
+          :class="{ grayscale: !creature.unlocked }"
         />
       </template>
       <template v-else-if="currentCategory === 'artifact'">
@@ -93,6 +94,7 @@
           :artifact="(artifact as Artifact)"
           :size="160"
           :cost="artifact.cost"
+          :class="{ grayscale: !artifact.unlocked }"
         />
       </template>
       <template v-else-if="currentCategory === 'enchantment'">
@@ -102,6 +104,7 @@
           :enchantment="(enchantment as Enchantment)"
           :size="180"
           :cost="enchantment.cost"
+          :class="{ grayscale: !enchantment.unlocked }"
         />
       </template>
     </div>
@@ -322,26 +325,6 @@ watch(() => currentCategory.value, (newVal, oldVal) => {
   > .grayscale {
     filter: grayscale(1) brightness(.5);
     pointer-events: none;
-  }
-
-  > .selected {
-    position: relative;
-
-    > * {
-      filter: brightness(.5);
-    }
-
-    &::after {
-      position: absolute;
-      top: 20px;
-      bottom: 20px;
-      left: 20px;
-      right: 20px;
-      content: '';
-      background-image: url('/ui/checkmark.png');
-      background-repeat: no-repeat;
-      background-size: cover;
-    }
   }
 }
 

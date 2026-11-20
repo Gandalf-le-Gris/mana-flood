@@ -1,13 +1,9 @@
 import { enchantments } from "@/types/enchantments/enchantments";
-import { shuffle } from "./ArrayUtils";
+import type { Rarity } from "@/types/creatures/Creature";
+import { PoolUtils } from "./PoolUtils";
 
 export class EnchantmentUtils {
-  static getRandomEnchantment(plane: string): string {
-    return shuffle(
-      enchantments
-      .map(c => new c())
-      .map(c => Array.from({ length: Number(c.pool[plane] ?? c.pool['any'] ?? 0) }, () => c))
-      .flat()
-    )[0]?.name ?? 'mirari-s-wake';
+  static getRandomEnchantment(plane: string, rarity?: Rarity | number): string {
+    return PoolUtils.getRandomItem(enchantments, plane, rarity, 'mirari-s-wake');
   }
 }

@@ -33,7 +33,12 @@
       "cabal-evangel": "Prédicatrice de la Coterie",
       "urza": "Urza",
       "karnstruct": "Construction",
-      "cityscape-leveler": "Lisseur de métropole"
+      "cityscape-leveler": "Lisseur de métropole",
+      "auramancer": "Auramancienne",
+      "prodigal-sorcerer": "Sorcier sybarite",
+      "cabal-paladin": "Paladin de la Coterie",
+      "viashino-pyromancer": "Pyromancien viashino",
+      "grizzly-bears": "Grizzlis"
     }
   },
   "artifacts": {
@@ -146,7 +151,19 @@
       "minor-sacrifice": "Sacrifice mineur",
       "sacrifice": "Sacrifice",
       "major-sacrifice": "Sacrifice majeur",
-      "lord-high-artificer": "Seigneur grand-artificier"
+      "lord-high-artificer": "Seigneur grand-artificier",
+      "minor-crafting-artifact": "Invention",
+      "crafting-artifact": "Découverte",
+      "major-crafting-artifact": "Idée de génie",
+      "minor-crafting-enchantment": "Infusion",
+      "crafting-enchantment": "Harmonie",
+      "major-crafting-enchantment": "Auramancie",
+      "minor-damage": "Attaque mineure",
+      "damage": "Attaque",
+      "major-damage": "Attaque majeure",
+      "minor-sacrifice-damage": "Attaque risquée",
+      "sacrifice-damage": "Assaut frontal",
+      "major-sacrifice-damage": "Frappe désespérée"
     },
     "description": {
       "minor-convert-white": "Convertit 3 orbes aléatoires en orbes blancs.",
@@ -192,7 +209,19 @@
       "minor-sacrifice": "Convertit 5 orbes aléatoires en orbes noirs au prix de 50 PV.",
       "sacrifice": "Convertit 10 orbes aléatoires en orbes noirs au prix de 75 PV.",
       "major-sacrifice": "Convertit 15 orbes aléatoires en orbes noirs au prix de 100 PV.",
-      "lord-high-artificer": "Réinitialise les temps de recharge de tous les artefacts."
+      "lord-high-artificer": "Réinitialise les temps de recharge de tous les artefacts.",
+      "minor-crafting-artifact": "Remplace l'artefact de sa colonne par un artefact commun aléatoire.",
+      "crafting-artifact": "Remplace l'artefact de sa colonne par un artefact peu commun ou rare aléatoire.",
+      "major-crafting-artifact": "Remplace l'artefact de sa colonne par un artefact de boss aléatoire.",
+      "minor-crafting-enchantment": "Remplace l'enchantement de sa colonne par un enchantement commun aléatoire.",
+      "crafting-enchantment": "Remplace l'enchantement de sa colonne par un enchantement peu commun ou rare aléatoire.",
+      "major-crafting-enchantment": "Remplace l'enchantement de sa colonne par un enchantement de boss aléatoire.",
+      "minor-damage": "Inflige 50 dégâts.",
+      "damage": "Inflige 100 dégâts.",
+      "major-damage": "Inflige 150 dégâts.",
+      "minor-sacrifice-damage": "Inflige 100 dégâts au prix de 50 PV.",
+      "sacrifice-damage": "Inflige 200 dégâts au prix de 75 PV.",
+      "major-sacrifice-damage": "Inflige 300 dégâts au prix de 100 PV."
     }
   },
   "results": {

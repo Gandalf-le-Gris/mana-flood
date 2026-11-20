@@ -133,7 +133,7 @@ function triggerAbility(index: number) {
   if (!creature?.activatedAbility) return;
 
   const ability = creature.activatedAbility;
-  const success = ability.execute(battleContext);
+  const success = ability.execute(battleContext, { sourceIndex: index, sourceType: 'creature' });
   if (success) {
     game.cooldowns[index] = ability.cooldown;
   }
@@ -145,7 +145,7 @@ function triggerArtifactAbility(index: number) {
   if (!artifact?.activatedAbility) return;
 
   const ability = artifact.activatedAbility;
-  const success = ability.execute(battleContext);
+  const success = ability.execute(battleContext, { sourceIndex: index, sourceType: 'artifact' });
   if (success) {
     game.artifactCooldowns[index] = ability.cooldown;
   }
