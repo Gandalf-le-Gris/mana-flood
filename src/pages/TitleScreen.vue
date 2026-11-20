@@ -7,10 +7,12 @@
       <text-button
         :text="$t('title.options.achievements')"
         :size="80"
+        disabled
       />
       <text-button
         :text="$t('title.options.codex')"
         :size="80"
+        @click="emit('move-to-screen', 'CodexScreen', ScreenTransition.FadeToBlack)"
       />
       <text-button
         :text="$t('title.options.play')"
@@ -21,10 +23,12 @@
         :text="$t('title.options.load')"
         :size="80"
         :disabled="!gameStore.current"
+        @click="emit('move-to-screen', 'BattleScreen', ScreenTransition.FadeToBlack)"
       />
       <text-button
         :text="$t('title.options.settings')"
         :size="80"
+        disabled
       />
     </div>
   </div>

@@ -8,7 +8,7 @@
       />
     </transition>
     <div class="general-info beleren-small-caps">
-      {{ $t(`planes.name.${buildPlane(game.plane).name}`) }} - {{ game.floor }}
+      {{ $t(`planes.name.${buildPlane(game.plane).name}`) }}<span v-if=game.floor> - {{ game.floor }}</span>
     </div>
     <battle-info
       ref="battleInfo"

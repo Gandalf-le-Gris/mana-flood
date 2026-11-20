@@ -59,6 +59,7 @@ import KeywordExtort from './KeywordExtort.vue';
 import KeywordEvolve from './KeywordEvolve.vue';
 import Knowledge from './Knowledge.vue';
 import Boss from './Boss.vue';
+import Enchantment from './Enchantment.vue';
 
 const customSvgNameToComponent: any = {
   B,
@@ -81,6 +82,7 @@ const customSvgNameToComponent: any = {
   Sorcery,
   Artifact,
   Hero,
+  Enchantment,
   '0': _0,
   '1': _1,
   '2': _2,

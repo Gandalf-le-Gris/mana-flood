@@ -22,6 +22,7 @@ import TitleScreen from './pages/TitleScreen.vue'
 import Test from './pages/Test.vue'
 import BattleScreen from './pages/BattleScreen.vue'
 import TeamSelector from './pages/TeamSelector.vue'
+import CodexScreen from './pages/CodexScreen.vue'
 
 const app = createApp(App)
 
@@ -32,6 +33,7 @@ app.component('LoadingScreen', LoadingScreen)
 app.component('TitleScreen', TitleScreen)
 app.component('BattleScreen', BattleScreen)
 app.component('TeamSelector', TeamSelector)
+app.component('CodexScreen', CodexScreen)
 
 app.mixin({
   mounted() {
