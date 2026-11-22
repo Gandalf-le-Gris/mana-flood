@@ -53,6 +53,12 @@
       "mirari-s-wake": "Éveil du Mirari"
     }
   },
+  "spells": {
+    "one": "Sort",
+    "name": {
+      "lightning-bolt": "Foudre"
+    }
+  },
   "planes": {
     "next": "Choisissez votre prochaine destination",
     "name": {

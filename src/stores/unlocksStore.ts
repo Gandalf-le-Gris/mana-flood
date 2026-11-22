@@ -6,6 +6,7 @@ export interface Unlocks {
   creatures: string[],
   artifacts: string[],
   enchantments: string[],
+  spells: string[],
   planes: string[],
   lastTeam: (string | null)[],
 }
@@ -17,6 +18,7 @@ const DEFAULT_STATE: Unlocks = {
   creatures: baseCreatures,
   artifacts: [],
   enchantments: [],
+  spells: [],
   planes: basePlanes,
   lastTeam: [null, null, null, null, null],
 };

@@ -9,7 +9,7 @@
         <div
           v-for="(creature, index) in team"
           :key="index"
-          class="creature-slot d-flex justify-center"
+          class="d-flex justify-center"
         >
           <div
             class="portrait-wrapper"

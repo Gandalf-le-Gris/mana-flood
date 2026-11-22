@@ -4,6 +4,7 @@ export interface ShopContent {
   creature?: string,
   artifact?: string,
   enchantment?: string,
+  spell?: string,
 }
 
 export class Game {
@@ -18,6 +19,7 @@ export class Game {
   artifactCooldowns: number[] = [0, 0, 0, 0, 0];
   artifacts: (string | null)[] = [null, null, null, null, null];
   enchantments: (string | null)[] = [null, null, null, null, null];
+  spells: (string | null)[] = [null, null, null];
   currentEnemies: string[] = [];
   shopContent: ShopContent = {};
 

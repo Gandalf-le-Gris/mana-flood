@@ -29,18 +29,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import ManaOrb from './ManaOrb.vue';
-import { Orb } from '@/types/Orb';
-import { extendedColors, type ExtendedColor } from '@/types/Color';
-import { choice } from '@/utils/ArrayUtils';
 import { useGameStore } from '@/stores/gameStore';
-import { GameUtils } from '@/utils/GameUtils';
+import { extendedColors, type ExtendedColor } from '@/types/Color';
 import { Game } from '@/types/Game';
+import { Orb } from '@/types/Orb';
 import type { Effect } from '@/types/effects/Effect.ts';
-import { buildCreature } from '@/types/creatures/creatures.ts';
-import { buildArtifact } from '@/types/artifacts/artifacts.ts';
-import { buildEnchantment } from '@/types/enchantments/enchantments.ts';
+import { choice } from '@/utils/ArrayUtils';
+import { GameUtils } from '@/utils/GameUtils';
+import { computed, onMounted, ref } from 'vue';
+import ManaOrb from './ManaOrb.vue';
 
 const emit = defineEmits(['match', 'turn-end']);
 

@@ -62,6 +62,25 @@
             />
           </v-col>
         </template>
+        <template v-if="game.shopContent.spell">
+          <v-col
+            class="d-flex flex-column ma-auto hover-scale"
+            @click="addSpell(buildSpell(game.shopContent.spell))"
+          >
+            <spell-portrait :spell="buildSpell(game.shopContent.spell)" :size="200" />
+            <h2 class="mt-3 mb-0 text-center">{{ $t(`spells.name.${buildSpell(game.shopContent.spell).name}`) }}</h2>
+            <h3 class="my-0 text-center">{{ $t('spells.one') }}</h3>
+          </v-col>
+          <v-col cols="auto">
+            <v-divider
+              vertical
+              opacity=".7"
+              thickness="3"
+              gradient
+              class="h-100"
+            />
+          </v-col>
+        </template>
         <v-col
           class="d-flex flex-column ma-auto hover-scale"
           @click="healTeam"
@@ -78,6 +97,7 @@
       :creature="creatureToAdd"
       :artifact="artifactToAdd"
       :enchantment="enchantmentToAdd"
+      :spell="spellToAdd"
       @edited="commitTeamEdit"
     />
   </div>
@@ -99,6 +119,9 @@ import CharacterPortrait from './CharacterPortrait.vue';
 import EnchantmentPortrait from './EnchantmentPortrait.vue';
 import TeamDetailDialog from './TeamDetailDialog.vue';
 import UiCard from './UiCard.vue';
+import type { Spell } from '@/types/spells/Spell.ts';
+import { buildSpell } from '@/types/spells/spells.ts';
+import SpellPortrait from './SpellPortrait.vue';
 
 const game: Game = useGameStore().current!;
 
@@ -108,11 +131,13 @@ const showTeamDetail: Ref<boolean> = ref(false);
 const creatureToAdd: Ref<Creature | undefined> = ref();
 const artifactToAdd: Ref<Artifact | undefined> = ref();
 const enchantmentToAdd: Ref<Enchantment | undefined> = ref();
+const spellToAdd: Ref<Spell | undefined> = ref();
 
 function addCreature(creature: Creature) {
   creatureToAdd.value = creature;
   artifactToAdd.value = undefined;
   enchantmentToAdd.value = undefined;
+  spellToAdd.value = undefined;
   showTeamDetail.value = true;
 }
 
@@ -120,13 +145,23 @@ function addArtifact(artifact: Artifact) {
   creatureToAdd.value = undefined;
   artifactToAdd.value = artifact;
   enchantmentToAdd.value = undefined;
+  spellToAdd.value = undefined;
   showTeamDetail.value = true;
 }
 
-function addEnchantment(enchantment: Artifact) {
+function addEnchantment(enchantment: Enchantment) {
   creatureToAdd.value = undefined;
   artifactToAdd.value = undefined;
   enchantmentToAdd.value = enchantment;
+  spellToAdd.value = undefined;
+  showTeamDetail.value = true;
+}
+
+function addSpell(spell: Spell) {
+  creatureToAdd.value = undefined;
+  artifactToAdd.value = undefined;
+  enchantmentToAdd.value = undefined;
+  spellToAdd.value = spell;
   showTeamDetail.value = true;
 }
 

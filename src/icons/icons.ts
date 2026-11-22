@@ -17,7 +17,6 @@ import Rakdos from './Rakdos.vue';
 import Selesnya from './Selesnya.vue';
 import Simic from './Simic.vue';
 import Creature from './Creature.vue';
-import Sorcery from './Sorcery.vue';
 import Artifact from './Artifact.vue';
 import _0 from './0.vue';
 import _1 from './1.vue';
@@ -60,6 +59,7 @@ import KeywordEvolve from './KeywordEvolve.vue';
 import Knowledge from './Knowledge.vue';
 import Boss from './Boss.vue';
 import Enchantment from './Enchantment.vue';
+import Spell from './Spell.vue';
 
 const customSvgNameToComponent: any = {
   B,
@@ -79,7 +79,7 @@ const customSvgNameToComponent: any = {
   Selesnya,
   Simic,
   Creature,
-  Sorcery,
+  Spell,
   Artifact,
   Hero,
   Enchantment,

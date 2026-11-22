@@ -93,7 +93,6 @@
           :key="artifact.name"
           :artifact="(artifact as Artifact)"
           :size="160"
-          :cost="artifact.cost"
           :class="{ grayscale: !artifact.unlocked }"
         />
       </template>
@@ -103,8 +102,16 @@
           :key="enchantment.name"
           :enchantment="(enchantment as Enchantment)"
           :size="180"
-          :cost="enchantment.cost"
           :class="{ grayscale: !enchantment.unlocked }"
+        />
+      </template>
+      <template v-else-if="currentCategory === 'spell'">
+        <spell-portrait
+          v-for="spell in cardList"
+          :key="spell.name"
+          :spell="(spell as Spell)"
+          :size="160"
+          :class="{ grayscale: !spell.unlocked }"
         />
       </template>
     </div>
@@ -116,14 +123,17 @@ import ArtifactPortrait from '@/components/ArtifactPortrait.vue';
 import CharacterPortrait from '@/components/CharacterPortrait.vue';
 import EnchantmentPortrait from '@/components/EnchantmentPortrait.vue';
 import IconButton from '@/components/IconButton.vue';
+import SpellPortrait from '@/components/SpellPortrait.vue';
 import { useUnlockStore } from '@/stores/unlocksStore';
 import type { Artifact } from '@/types/artifacts/Artifact';
 import { artifacts } from '@/types/artifacts/artifacts';
 import { colors } from '@/types/Color';
 import { Creature, Rarity } from '@/types/creatures/Creature';
-import { buildCreature, creatures } from '@/types/creatures/creatures';
+import { creatures } from '@/types/creatures/creatures';
 import type { Enchantment } from '@/types/enchantments/Enchantment';
 import { enchantments } from '@/types/enchantments/enchantments';
+import type { Spell } from '@/types/spells/Spell';
+import { spells } from '@/types/spells/spells';
 import { CreatureUtils } from '@/utils/CreatureUtils';
 import { ScreenTransition } from '@/utils/ScreenTransition';
 import { computed, ref, watch, type ComputedRef, type Ref } from 'vue';
@@ -135,7 +145,7 @@ const emits = defineEmits(['move-to-screen']);
 
 const unlocks = useUnlockStore().get;
 
-const categories = ['creature', 'artifact', 'enchantment'];
+const categories = ['creature', 'artifact', 'enchantment', 'spell'];
 type Category = typeof categories[number];
 const currentCategory: Ref<Category> = ref('creature');
 
@@ -159,11 +169,8 @@ const sort: Ref<Sort> = ref({
   field: 'name',
   ascending: true,
 });
-const team: Ref<(Creature | null)[]> = ref(
-  unlocks.lastTeam.map(c => c ? buildCreature(c) : null)
-);
 
-const allCards: ComputedRef<((Creature | Artifact | Enchantment) & { displayName: string, cost: number, unlocked: boolean })[]> = computed(() => {
+const allCards: ComputedRef<((Creature | Artifact | Enchantment | Spell) & { displayName: string, cost: number, unlocked: boolean })[]> = computed(() => {
   switch (currentCategory.value) {
     case 'creature':
       return creatures.map(b => {
@@ -187,13 +194,20 @@ const allCards: ComputedRef<((Creature | Artifact | Enchantment) & { displayName
         c.unlocked = unlocks.enchantments.includes(c.name);
         return c;
       });
+    case 'spell':
+      return spells.map(b => {
+        const c = new b() as Spell & { displayName: string, cost: number, unlocked: boolean };
+        c.displayName = t(`spells.name.${c.name}`);
+        c.unlocked = unlocks.spells.includes(c.name);
+        return c;
+      });
     default:
       return [];
   }
 }
 );
 
-const cardList: ComputedRef<((Creature | Artifact | Enchantment) & { displayName: string, cost: number, unlocked: boolean })[]> = computed(() => {
+const cardList: ComputedRef<((Creature | Artifact | Enchantment | Spell) & { displayName: string, cost: number, unlocked: boolean })[]> = computed(() => {
   const displayName: string = filters.value.displayName?.toLowerCase() ?? '';
   return allCards.value
     .filter(c =>
@@ -211,7 +225,7 @@ const cardList: ComputedRef<((Creature | Artifact | Enchantment) & { displayName
       return sort.value.ascending ? a.displayName.localeCompare(b.displayName) : b.displayName.localeCompare(a.displayName);
     });
 
-  function matchesDisplayName(displayName: string, card: (Creature | Artifact | Enchantment)): boolean {
+  function matchesDisplayName(displayName: string, card: (Creature | Artifact | Enchantment | Spell)): boolean {
     if (!displayName) {
       return true;
     }
@@ -222,12 +236,14 @@ const cardList: ComputedRef<((Creature | Artifact | Enchantment) & { displayName
         return t(`artifacts.name.${card.name}`).toLowerCase().includes(displayName);
       case 'enchantment':
         return t(`enchantments.name.${card.name}`).toLowerCase().includes(displayName);
+      case 'spell':
+        return t(`spells.name.${card.name}`).toLowerCase().includes(displayName);
       default:
         return true;
     }
   }
 
-  function matchesColors(card: (Creature | Artifact | Enchantment)): boolean {
+  function matchesColors(card: (Creature | Artifact | Enchantment | Spell)): boolean {
     if (!filters.value.colors?.length) {
       return true;
     }

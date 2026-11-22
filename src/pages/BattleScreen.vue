@@ -25,6 +25,10 @@
       @match="processMatch"
       @turn-end="onTurnEnd"
     />
+    <spell-info
+      class="spell-info"
+      :class="{hidden: shopOpen || planesOpen}"
+    />
     <battle-shop
       class="shop"
       :class="{hidden: !shopOpen}"
@@ -73,6 +77,7 @@ import IconButton from '@/components/IconButton.vue';
 import ManaBoard from '@/components/ManaBoard.vue';
 import PlaneSelector from '@/components/PlaneSelector.vue';
 import ResultDialog from '@/components/ResultDialog.vue';
+import SpellInfo from '@/components/SpellInfo.vue';
 import TeamDetailDialog from '@/components/TeamDetailDialog.vue';
 import { useGameStore } from '@/stores/gameStore';
 import { useUnlockStore } from '@/stores/unlocksStore';
@@ -278,9 +283,21 @@ onMounted(() => {
 
 .mana-board {
   position: absolute;
-  top: 50%;
+  top: 48%;
   right: 64px;
   transform: translateY(-50%);
+  transition: right 1s ease-in-out;
+
+  &.hidden {
+    right: -100%;
+  }
+}
+
+.spell-info {
+  position: absolute;
+  bottom: 16px;
+  right: calc(64px + 470px);
+  transform: translateX(50%);
   transition: right 1s ease-in-out;
 
   &.hidden {

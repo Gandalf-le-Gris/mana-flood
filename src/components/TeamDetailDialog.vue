@@ -20,66 +20,90 @@
           '--extra-width': `${extraWidth}px`,
         }"
       >
-        <div class="d-flex flex-column ga-3">
-          <div class="team">
-            <div
-              v-for="(c, index) in team"
-              :key="index"
-              @click="insertCreature(index)"
-              :class="{ 'hover-scale': creature }"
-            >
-              <character-portrait
-                :character="c"
-                :size="180"
-                :cooldown="game.cooldowns?.[index]"
-              />
+        <div class="d-flex">
+          <div class="d-flex ga-3 ml-3">
+            <div class="d-flex flex-column ga-5 my-auto">
+              <div
+                v-for="(s, index) in spells"
+                :key="index"
+                @click="insertSpell(index)"
+                :class="{ 'hover-scale': spell }"
+              >
+                <spell-portrait
+                  :spell="s"
+                  :size="120"
+                />
+              </div>
             </div>
+            <v-divider
+              vertical
+              opacity=".7"
+              thickness="3"
+              gradient
+              class="h-100 ml-5 mr-8"
+            />
           </div>
-          <div class="team artifacts">
-            <div
-              v-for="(a, index) in artifacts"
-              :key="index"
-              @click="insertArtifact(index)"
-              :class="{ 'hover-scale': artifact }"
-            >
-              <artifact-portrait
-                :artifact="a"
-                :size="130"
-                :cooldown="game.artifactCooldowns?.[index]"
-              />
+          <div class="d-flex flex-column ga-3">
+            <div class="team">
+              <div
+                v-for="(c, index) in team"
+                :key="index"
+                @click="insertCreature(index)"
+                :class="{ 'hover-scale': creature }"
+              >
+                <character-portrait
+                  :character="c"
+                  :size="180"
+                  :cooldown="game.cooldowns?.[index]"
+                />
+              </div>
             </div>
-          </div>
-          <div class="team mb-4">
-            <div
-              v-for="(_, index) in team"
-              :key="index"
-              class="d-flex justify-space-around ga-10"
-            >
-              <arrow-button
-                direction="left"
-                size="36"
-                :disabled="index === 0"
-                @click="swapTeam(index, index - 1)"
-              />
-              <arrow-button
-                direction="right"
-                size="36"
-                :disabled="index === team.length - 1"
-                @click="swapTeam(index, index + 1)"
-              />
+            <div class="team artifacts">
+              <div
+                v-for="(a, index) in artifacts"
+                :key="index"
+                @click="insertArtifact(index)"
+                :class="{ 'hover-scale': artifact }"
+              >
+                <artifact-portrait
+                  :artifact="a"
+                  :size="130"
+                  :cooldown="game.artifactCooldowns?.[index]"
+                />
+              </div>
             </div>
-          </div>
-          <div class="team mt-6 mb-4">
-            <div
-              v-for="(e, index) in enchantments"
-              :key="index"
-              @click="insertEnchantment(index)"
-              :class="{ 'hover-scale': enchantment }"
-            >
-              <enchantment-portrait
-                :enchantment="e"
-                :size="160"
-              />
+            <div class="team mb-4">
+              <div
+                v-for="(_, index) in team"
+                :key="index"
+                class="d-flex justify-space-around ga-10"
+              >
+                <arrow-button
+                  direction="left"
+                  size="36"
+                  :disabled="index === 0"
+                  @click="swapTeam(index, index - 1)"
+                />
+                <arrow-button
+                  direction="right"
+                  size="36"
+                  :disabled="index === team.length - 1"
+                  @click="swapTeam(index, index + 1)"
+                />
+              </div>
+            </div>
+            <div class="team mt-6 mb-4">
+              <div
+                v-for="(e, index) in enchantments"
+                :key="index"
+                @click="insertEnchantment(index)"
+                :class="{ 'hover-scale': enchantment }"
+              >
+                <enchantment-portrait
+                  :enchantment="e"
+                  :size="160"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -109,6 +133,10 @@
                 <enchantment-portrait :enchantment :size="220" />
                 <h2 class="text-center mb-0 mt-3">{{ $t(`enchantments.name.${enchantment.name}`) }}</h2>
               </template>
+              <template v-else-if="spell">
+                <spell-portrait :spell :size="200" />
+                <h2 class="text-center mb-0 mt-3">{{ $t(`spells.name.${spell.name}`) }}</h2>
+              </template>
             </div>
           </div>
         </div>
@@ -134,6 +162,9 @@ import IconButton from './IconButton.vue';
 import type { Enchantment } from '@/types/enchantments/Enchantment.ts';
 import { buildEnchantment } from '@/types/enchantments/enchantments.ts';
 import { useUnlockStore, type Unlocks } from '@/stores/unlocksStore.ts';
+import SpellPortrait from './SpellPortrait.vue';
+import type { Spell } from '@/types/spells/Spell.ts';
+import { buildSpell } from '@/types/spells/spells.ts';
 
 const show = defineModel({ type: Boolean, required: true });
 
@@ -141,15 +172,16 @@ const props = defineProps<{
   creature?: Creature,
   artifact?: Artifact,
   enchantment?: Enchantment,
+  spell?: Spell,
 }>();
 
 const emits = defineEmits(['edited']);
 
 const editing: ComputedRef<boolean> = computed(() =>
-  !!props.artifact || !!props.creature
+  !!props.artifact || !!props.creature || !!props.enchantment || !!props.spell
 );
 
-const baseWidth: Ref<number> = ref(1100);
+const baseWidth: Ref<number> = ref(1180);
 const extraWidth: Ref<number> = ref(350);
 
 const game: Game = useGameStore().current!;
@@ -157,6 +189,7 @@ const unlocks: Unlocks = useUnlockStore().get;
 const team = computed<(Creature | null)[]>(() => game.team.map(c => c ? buildCreature(c) : null));
 const artifacts = computed<(Artifact | null)[]>(() => game.artifacts.map(c => c ? buildArtifact(c) : null));
 const enchantments = computed<(Enchantment | null)[]>(() => game.enchantments.map(c => c ? buildEnchantment(c) : null));
+const spells = computed<(Spell | null)[]>(() => game.spells.map(c => c ? buildSpell(c) : null));
 
 function insertCreature(index: number) {
   if (props.creature) {
@@ -184,6 +217,14 @@ function insertEnchantment(index: number) {
   if (props.enchantment) {
     game.enchantments.splice(index, 1, props.enchantment.name);
     insertUnique(unlocks.enchantments, props.enchantment.name);
+    emits('edited');
+  }
+}
+
+function insertSpell(index: number) {
+  if (props.spell) {
+    game.spells.splice(index, 1, props.spell.name);
+    insertUnique(unlocks.spells, props.spell.name);
     emits('edited');
   }
 }
