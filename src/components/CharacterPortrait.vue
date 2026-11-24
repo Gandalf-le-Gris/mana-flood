@@ -45,6 +45,7 @@
       v-if="character"
       v-model="showDetail"
       :character
+      :index
     />
   </div>
 </template>
@@ -60,6 +61,7 @@ const props = withDefaults(defineProps<{
   cooldown?: number,
   isReady?: boolean,
   cost?: number,
+  index?: number,
 }>(), {
   size: 150,
   cooldown: undefined,

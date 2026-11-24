@@ -4,6 +4,6 @@ import { PoolUtils } from "./PoolUtils";
 
 export class ArtifactUtils {
   static getRandomArtifact(plane: string, rarity?: Rarity | number): string {
-    return PoolUtils.getRandomItem(artifacts, plane, rarity, 'adaptive-omnitool');
+    return PoolUtils.getRandomItem(artifacts, plane, rarity, 'spellbook');
   }
 }

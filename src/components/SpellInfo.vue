@@ -36,7 +36,7 @@ function canActivate(index: number): boolean {
   if (!battleContext || !battleContext.canAct()) return false;
   const spell = spells.value[index];
   if (!spell?.activatedAbility) return false;
-  return spell?.activatedAbility.condition(game);
+  return spell?.activatedAbility.condition(game, { sourceIndex: index });
 }
 
 function activateSpell(index: number) {

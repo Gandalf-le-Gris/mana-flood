@@ -55,6 +55,7 @@
                   :character="c"
                   :size="180"
                   :cooldown="game.cooldowns?.[index]"
+                  :index
                 />
               </div>
             </div>
@@ -165,6 +166,7 @@ import { useUnlockStore, type Unlocks } from '@/stores/unlocksStore.ts';
 import SpellPortrait from './SpellPortrait.vue';
 import type { Spell } from '@/types/spells/Spell.ts';
 import { buildSpell } from '@/types/spells/spells.ts';
+import { GameUtils } from '@/utils/GameUtils.ts';
 
 const show = defineModel({ type: Boolean, required: true });
 
@@ -194,6 +196,7 @@ const spells = computed<(Spell | null)[]>(() => game.spells.map(c => c ? buildSp
 function insertCreature(index: number) {
   if (props.creature) {
     game.team.splice(index, 1, props.creature.name);
+    game.hp = Math.min(GameUtils.getTotalHp(game), game.hp);
     insertUnique(unlocks.creatures, props.creature.name);
     if (game.cooldowns) {
       game.cooldowns[index] = 0;

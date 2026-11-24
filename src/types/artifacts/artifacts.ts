@@ -1,8 +1,22 @@
 import { AdaptiveOmnitool } from "./AdaptiveOmnitool";
 import type { Artifact } from "./Artifact";
+import { CharcoalDiamond } from './CharcoalDiamond';
+import { FireDiamond } from './FireDiamond';
+import { MarbleDiamond } from './MarbleDiamond';
+import { MossDiamond } from './MossDiamond';
+import { PowerstoneShard } from './PowerstoneShard';
+import { SkyDiamond } from './SkyDiamond';
+import { Spellbook } from './Spellbook';
 
 export const artifacts: typeof Artifact[] = [
-  AdaptiveOmnitool
+  Spellbook,
+  AdaptiveOmnitool,
+  PowerstoneShard,
+  MarbleDiamond,
+  SkyDiamond,
+  CharcoalDiamond,
+  FireDiamond,
+  MossDiamond,
 ];
 
 export function buildArtifact(artifact: string | Artifact): Artifact {

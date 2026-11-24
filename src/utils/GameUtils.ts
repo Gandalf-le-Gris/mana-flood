@@ -67,7 +67,7 @@ export class GameUtils {
     return game.team
       .filter(c => c)
       .map(c => buildCreature(c!))
-      .reduce((acc, x) => CreatureUtils.getDamage(x, match.color, match.size) + acc, 0);
+      .reduce((acc, x, i) => CreatureUtils.getDamage(x, match.color, match.size, i, game) + acc, 0);
   }
 
   static computeEnemyDamage(game: Game, attacker: Creature, enemies: Creature[]) {

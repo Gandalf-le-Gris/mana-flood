@@ -5,6 +5,7 @@ import { CabalPaladin } from './CabalPaladin';
 import { CityscapeLeveler } from './CityscapeLeveler';
 import type { Creature } from "./Creature";
 import { GrizzlyBears } from './GrizzlyBears';
+import { Juggernaut } from './Juggernaut';
 import { Karnstruct } from './Karnstruct';
 import { KnightOfNewBenalia } from './KnightOfNewBenalia';
 import { LlanowarElves } from "./LlanowarElves";
@@ -12,6 +13,7 @@ import { ProdigalSorcerer } from './ProdigalSorcerer';
 import { SkirkProspector } from "./SkirkProspector";
 import { Urza } from './Urza';
 import { ViashinoPyromancer } from './ViashinoPyromancer';
+import { VoltaicServant } from './VoltaicServant';
 
 export const creatures: typeof Creature[] = [
   LlanowarElves,
@@ -27,6 +29,8 @@ export const creatures: typeof Creature[] = [
   CabalPaladin,
   ViashinoPyromancer,
   GrizzlyBears,
+  VoltaicServant,
+  Juggernaut,
 ];
 
 export function buildCreature(creature: string | Creature): Creature {

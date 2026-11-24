@@ -1,15 +1,15 @@
+import type { Color } from '../Color';
 import { Rarity } from "../creatures/Creature";
-import type { ActivatedEffect } from "../effects/activated/ActivatedEffect";
-import { conversionEffects } from "../effects/activated/ConversionEffects";
+import { affinityAnthemEffects } from '../effects/shared/AffinityAnthemEffects';
 import { Artifact } from "./Artifact";
 
 export class AdaptiveOmnitool extends Artifact {
   name = 'adaptive-omnitool';
+  colors = ['W', 'U', 'B', 'R', 'G'] as Color[];
 
   pool = {
-    'any': Rarity.RARE,
     'avishkar': Rarity.COMMON,
   }
 
-  activatedAbility?: ActivatedEffect | undefined = conversionEffects.majorColorlessConversion;
+  teamEffects = [affinityAnthemEffects.minorAffinityAnthemSelfAll];
 }

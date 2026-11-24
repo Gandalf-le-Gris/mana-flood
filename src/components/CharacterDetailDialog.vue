@@ -52,9 +52,13 @@
                 v-for="color in extendedColors"
                 :key="color"
                 class="d-flex my-0"
-                :class="{ 'opacity-40': !character.colorAffinity[color] }"
+                :class="{
+                  'opacity-40': !affinities[color],
+                  'text-green-lighten-2': affinities[color] > character.colorAffinity[color],
+                  'text-red-lighten-2': affinities[color] < character.colorAffinity[color],
+                }"
               >
-                {{ character.colorAffinity[color] }}
+                {{ affinities[color] }}
                 <v-icon
                   :icon="`mtg:${color}`"
                   size="xs"
@@ -120,16 +124,22 @@ import type { Creature } from '@/types/creatures/Creature';
 import CharacterPortrait from './CharacterPortrait.vue';
 import IconButton from './IconButton.vue';
 import { extendedColors } from '@/types/Color.ts';
+import { computed } from 'vue';
+import { CreatureUtils } from '@/utils/CreatureUtils.ts';
+import { useGameStore } from '@/stores/gameStore.ts';
 
 const props = withDefaults(defineProps<{
   character: Creature,
   enemy?: boolean,
   damage?: number,
+  index?: number,
 }>(), {
   enemy: false,
 });
 
 const show = defineModel({ type: Boolean, required: true });
+
+const affinities = computed(() => CreatureUtils.getEffectiveAffinities(props.character, props.index, useGameStore().current));
 </script>
 
 <style lang="scss" scoped>

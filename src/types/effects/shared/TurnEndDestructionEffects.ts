@@ -29,7 +29,7 @@ class TurnEndDestructionEffect extends Effect {
   }
 }
 
-export const turnStartDestructionEffects = {
+export const turnEndDestructionEffects = {
   whiteDestruction: new TurnEndDestructionEffect('W', DestructionStrength.NORMAL),
   blueDestruction: new TurnEndDestructionEffect('U', DestructionStrength.NORMAL),
   blackDestruction: new TurnEndDestructionEffect('B', DestructionStrength.NORMAL),

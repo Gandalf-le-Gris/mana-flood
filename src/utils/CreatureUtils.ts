@@ -4,6 +4,8 @@ import { buildCreature, creatures } from "@/types/creatures/creatures";
 import { shuffle } from "./ArrayUtils";
 import { PoolUtils } from "./PoolUtils";
 import type { Game } from '@/types/Game';
+import { buildArtifact } from '@/types/artifacts/artifacts';
+import { buildEnchantment } from '@/types/enchantments/enchantments';
 
 export class CreatureUtils {
   static getRandomCreature(plane: string, rarity?: Rarity | number): string {
@@ -21,8 +23,8 @@ export class CreatureUtils {
     return creature.hpModifier * Creature.baseHp;
   }
 
-  static getDamage(creature: Creature, color: ExtendedColor, size: number) {
-    return Math.round(creature.damageModifier * (creature.colorAffinity[color] ?? 0) * size);
+  static getDamage(creature: Creature, color: ExtendedColor, size: number, index: number, game: Game) {
+    return Math.round(creature.damageModifier * (this.getEffectiveAffinities(creature, index, game)[color] ?? 0) * size);
   }
 
   static getEnemyHp(creature: Creature, game?: Game) {
@@ -53,6 +55,93 @@ export class CreatureUtils {
 
   static getRarity(creature: Creature): Rarity {
     return Object.values(creature.pool).reduce((acc, x) => x > acc ? x : acc, Rarity.BOSS);
+  }
+
+  static getEffectiveAffinities(creature: Creature, index?: number, game?: Game): Record<ExtendedColor, number> {
+      console.log(index, game)
+    if (!game || index == undefined) {
+      return creature.colorAffinity;
+    }
+    let res = creature.colorAffinity;
+    for (const e of game.currentEnemies.map(e => buildCreature(e))) {
+      for (const effect of e.enemyEffects) {
+        if (effect.affinityModifier && (!effect.activeCondition || effect.activeCondition(game))) {
+          res = mergeAffinities(res, getAffinityForDistance(effect.affinityModifier, 0));
+        }
+      }
+    }
+    for (let i = 0; i < game.team.length; i++) {
+      if (game.team[i]) {
+        for (const effect of buildCreature(game.team[i]!).teamEffects) {
+          if (effect.affinityModifier && (!effect.activeCondition || effect.activeCondition(game))) {
+            res = Math.abs(index - i) === 0
+              ? mergeAffinities(res, getAffinityForDistance(effect.affinityModifier, 0))
+              : Math.abs(index - i) === 1
+                ? mergeAffinities(res, getAffinityForDistance(effect.affinityModifier, 1))
+                : mergeAffinities(res, getAffinityForDistance(effect.affinityModifier, 2));
+          }
+        }
+      }
+    }
+    for (let i = 0; i < game.artifacts.length; i++) {
+      if (game.artifacts[i]) {
+        for (const effect of buildArtifact(game.artifacts[i]!).teamEffects) {
+          console.log(effect)
+          if (effect.affinityModifier && (!effect.activeCondition || effect.activeCondition(game))) {
+            console.log('yes')
+            res = Math.abs(index - i) === 0
+              ? mergeAffinities(res, getAffinityForDistance(effect.affinityModifier, 0))
+              : Math.abs(index - i) === 1
+                ? mergeAffinities(res, getAffinityForDistance(effect.affinityModifier, 1))
+                : mergeAffinities(res, getAffinityForDistance(effect.affinityModifier, 2));
+          }
+        }
+      }
+    }
+    for (let i = 0; i < game.enchantments.length; i++) {
+      if (game.enchantments[i]) {
+        for (const effect of buildEnchantment(game.enchantments[i]!).teamEffects) {
+          if (effect.affinityModifier && (!effect.activeCondition || effect.activeCondition(game))) {
+            res = Math.abs(index - i) === 0
+              ? mergeAffinities(res, getAffinityForDistance(effect.affinityModifier, 0))
+              : Math.abs(index - i) === 1
+                ? mergeAffinities(res, getAffinityForDistance(effect.affinityModifier, 1))
+                : mergeAffinities(res, getAffinityForDistance(effect.affinityModifier, 2));
+          }
+        }
+      }
+    }
+
+    return {
+      W: Math.max(0, res.W),
+      U: Math.max(0, res.U),
+      B: Math.max(0, res.B),
+      R: Math.max(0, res.R),
+      G: Math.max(0, res.G),
+      C: Math.max(0, res.C),
+    }
+
+    function getAffinityForDistance(a: Partial<Record<ExtendedColor, [number, number, number]>>, dist: number): Record<ExtendedColor, number> {
+      return {
+        W: a.W?.[dist] ?? 0,
+        U: a.U?.[dist] ?? 0,
+        B: a.B?.[dist] ?? 0,
+        R: a.R?.[dist] ?? 0,
+        G: a.G?.[dist] ?? 0,
+        C: a.C?.[dist] ?? 0,
+      }
+    }
+
+    function mergeAffinities(a: Record<ExtendedColor, number>, b: Record<ExtendedColor, number>): Record<ExtendedColor, number> {
+      return {
+        W: a.W + b.W,
+        U: a.U + b.U,
+        B: a.B + b.B,
+        R: a.R + b.R,
+        G: a.G + b.G,
+        C: a.C + b.C,
+      }
+    }
   }
 
   static visualDamage(damage: number, color: ExtendedColor, el: HTMLElement) {

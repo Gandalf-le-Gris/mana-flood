@@ -10,6 +10,7 @@ export class Effect {
   activeCondition?: (game: Game) => boolean;
 
   orbRateModifier?: Partial<Record<ExtendedColor, number>>;
+  affinityModifier?: Partial<Record<ExtendedColor, [number, number, number]>>;
   matchEffect?: (context: BattleContext, match: MatchGroup) => void;
   effect?: (context: BattleContext) => void;
 

@@ -20,6 +20,7 @@
               :character="creature"
               :cooldown="game.cooldowns?.[index]"
               :is-ready="canActivate(index)"
+              :index
             />
           </div>
         </div>
@@ -116,7 +117,7 @@ function canActivate(index: number): boolean {
   if (!battleContext || !battleContext.canAct()) return false;
   const creature = team.value[index];
   if (!creature?.activatedAbility) return false;
-  return (game.cooldowns?.[index] ?? 0) <= 0 && creature?.activatedAbility.condition(game);
+  return (game.cooldowns?.[index] ?? 0) <= 0 && creature?.activatedAbility.condition(game, { sourceIndex: index });
 }
 
 function canActivateArtifact(index: number): boolean {
@@ -124,7 +125,7 @@ function canActivateArtifact(index: number): boolean {
   const artifact = artifacts.value[index];
   if (!artifact?.activatedAbility) return false;
   if (GameUtils.isEffectActive(game, 'enemy.artifact-lock')) return false;
-  return (game.artifactCooldowns?.[index] ?? 0) <= 0 && artifact?.activatedAbility.condition(game);
+  return (game.artifactCooldowns?.[index] ?? 0) <= 0 && artifact?.activatedAbility.condition(game, { sourceIndex: index });
 }
 
 function triggerAbility(index: number) {
