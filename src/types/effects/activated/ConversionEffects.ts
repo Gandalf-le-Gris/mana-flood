@@ -24,8 +24,8 @@ class ConversionEffect extends ActivatedEffect {
     this.color = color;
   }
 
-  execute(context: BattleContext): boolean {
-    return context.convertOrbs(this.strength.value, this.color);
+  async execute(context: BattleContext): Promise<boolean> {
+    return await context.convertOrbs(this.strength.value, this.color);
   }
 }
 

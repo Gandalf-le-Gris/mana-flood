@@ -12,5 +12,5 @@ export abstract class ActivatedEffect extends Effect {
   abstract execute(context: BattleContext, params: {
     sourceIndex: number,
     sourceType: 'creature' | 'artifact' | 'spell',
-  }): boolean;
+  }): Promise<boolean> | boolean;
 }

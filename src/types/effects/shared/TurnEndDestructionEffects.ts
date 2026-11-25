@@ -24,8 +24,8 @@ class TurnEndDestructionEffect extends Effect {
     this.color = color;
   }
 
-  effect = (context: BattleContext) => {
-    context.destroyOrbs(this.strength.value, this.color);
+  effect = async (context: BattleContext) => {
+    await context.destroyOrbs(this.strength.value, this.color);
   }
 }
 

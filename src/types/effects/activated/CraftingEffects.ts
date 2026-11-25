@@ -27,7 +27,7 @@ class CreatureCraftingEffect extends ActivatedEffect {
     this.strength = strength;
   }
 
-  execute(context: BattleContext, { sourceIndex }: { sourceIndex: number } ): boolean {
+  async execute(context: BattleContext, { sourceIndex }: { sourceIndex: number } ): Promise<boolean> {
     context.game.team[sourceIndex] = CreatureUtils.getRandomCreature(
       context.game.plane,
       this.strength === CraftingStrength.MINOR
@@ -54,7 +54,7 @@ class ArtifactCraftingEffect extends ActivatedEffect {
     this.strength = strength;
   }
 
-  execute(context: BattleContext, { sourceIndex }: { sourceIndex: number } ): boolean {
+  async execute(context: BattleContext, { sourceIndex }: { sourceIndex: number } ): Promise<boolean> {
     context.game.artifacts[sourceIndex] = ArtifactUtils.getRandomArtifact(
       context.game.plane,
       this.strength === CraftingStrength.MINOR
@@ -80,7 +80,7 @@ class EnchantmentCraftingEffect extends ActivatedEffect {
     this.strength = strength;
   }
 
-  execute(context: BattleContext, { sourceIndex }: { sourceIndex: number } ): boolean {
+  async execute(context: BattleContext, { sourceIndex }: { sourceIndex: number } ): Promise<boolean> {
     context.game.enchantments[sourceIndex] = EnchantmentUtils.getRandomEnchantment(
       context.game.plane,
       this.strength === CraftingStrength.MINOR
@@ -105,7 +105,7 @@ class SpellCraftingEffect extends ActivatedEffect {
     this.strength = strength;
   }
 
-  execute(context: BattleContext ): boolean {
+  async execute(context: BattleContext ): Promise<boolean> {
     const index = context.game.spells.findIndex(s => !s);
     if (index < 0) return false;
 

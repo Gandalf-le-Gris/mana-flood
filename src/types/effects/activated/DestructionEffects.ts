@@ -24,8 +24,8 @@ class DestructionEffect extends ActivatedEffect {
     this.color = color;
   }
 
-  execute(context: BattleContext): boolean {
-    return context.destroyOrbs(this.strength.value, this.color);
+  async execute(context: BattleContext): Promise<boolean> {
+    return await context.destroyOrbs(this.strength.value, this.color);
   }
 }
 

@@ -27,9 +27,9 @@ class SacrificeDamageEffect extends ActivatedEffect {
     return game.hp > this.strength.cost;
   }
 
-  execute(context: BattleContext): boolean {
-    context.damageTeam(this.strength.cost);
-    context.damageEnemy(this.strength.value);
+  async execute(context: BattleContext): Promise<boolean> {
+    await context.damageTeam(this.strength.cost);
+    await context.damageEnemy(this.strength.value);
     return true;
   }
 }

@@ -21,7 +21,7 @@
       ref="manaBoard"
       class="mana-board"
       :class="{hidden: shopOpen || planesOpen}"
-      :disabled="isBattleEnding"
+      :disabled="isBattleEnding || isActionBusy"
       @match="processMatch"
       @turn-end="onTurnEnd"
     />
@@ -104,6 +104,8 @@ const emits = defineEmits(['move-to-screen']);
 const battleInfo = ref<InstanceType<typeof BattleInfo> | null>(null);
 const manaBoard = ref<InstanceType<typeof ManaBoard> | null>(null);
 const isBattleEnding = ref<boolean>(false);
+const busyCount = ref<number>(0);
+const isActionBusy = computed<boolean>(() => busyCount.value > 0);
 
 async function checkBattleEnd() {
   if (isBattleEnding.value) return;
@@ -125,38 +127,45 @@ async function checkBattleEnd() {
 
 const battleContext: BattleContext = {
   game,
-  healTeam(amount: number) {
-    battleInfo.value?.healTeam(amount);
+  async healTeam(amount: number) {
+    await battleInfo.value?.healTeam(amount);
   },
-  damageTeam(amount: number) {
-    battleInfo.value?.damageTeam(amount);
+  async damageTeam(amount: number) {
+    await battleInfo.value?.damageTeam(amount);
   },
-  damageEnemy(damage: number, color: ExtendedColor = 'C', targetIndex?: number) {
-    battleInfo.value?.dealDamageToEnemy(damage, color, targetIndex);
+  async damageEnemy(damage: number, color: ExtendedColor = 'C', targetIndex?: number) {
+    await battleInfo.value?.dealDamageToEnemy(damage, color, targetIndex);
   },
-  damageAllEnemies(damage: number, color: ExtendedColor = 'C') {
-    battleInfo.value?.dealDamageToAllEnemies(damage, color);
+  async damageAllEnemies(damage: number, color: ExtendedColor = 'C') {
+    await battleInfo.value?.dealDamageToAllEnemies(damage, color);
   },
-  convertOrbs(count: number, toColor: ExtendedColor, fromColor?: ExtendedColor) {
+  async convertOrbs(count: number, toColor: ExtendedColor, fromColor?: ExtendedColor) {
     if (manaBoard.value?.isBusy() || isBattleEnding.value) return false;
-    return manaBoard.value?.convertOrbs(count, toColor, fromColor) ?? false;
+    return (await manaBoard.value?.convertOrbs(count, toColor, fromColor)) ?? false;
   },
-  destroyOrbs(count: number, avoidColor?: ExtendedColor) {
+  async destroyOrbs(count: number, avoidColor?: ExtendedColor) {
     if (manaBoard.value?.isBusy() || isBattleEnding.value) return false;
-    return manaBoard.value?.destroyOrbs(count, avoidColor) ?? false;
+    return (await manaBoard.value?.destroyOrbs(count, avoidColor)) ?? false;
   },
-  shuffleBoard() {
+  async shuffleBoard() {
     if (manaBoard.value?.isBusy() || isBattleEnding.value) return false;
-    return manaBoard.value?.shuffleBoard() ?? false;
+    return (await manaBoard.value?.shuffleBoard()) ?? false;
   },
-  rechargeCreature(index: number, turns: number) {
-    battleInfo.value?.rechargeCreature(index, turns);
+  async rechargeCreature(index: number, turns: number) {
+    await battleInfo.value?.rechargeCreature(index, turns);
   },
-  rechargeArtifact(index: number, turns: number) {
-    battleInfo.value?.rechargeArtifact(index, turns);
+  async rechargeArtifact(index: number, turns: number) {
+    await battleInfo.value?.rechargeArtifact(index, turns);
   },
   canAct() {
-    return !(manaBoard.value?.isBusy() || isBattleEnding.value);
+    return !(manaBoard.value?.isBusy() || isBattleEnding.value || isActionBusy.value);
+  },
+  setBusy(busy: boolean) {
+    if (busy) {
+      busyCount.value++;
+    } else {
+      busyCount.value = Math.max(0, busyCount.value - 1);
+    }
   }
 };
 
@@ -169,26 +178,31 @@ export interface MatchGroup {
   size: number;
 }
 
-function processMatch(matches: MatchGroup[]) {
+async function processMatch(matches: MatchGroup[]) {
   const activeEffects: Effect[] = GameUtils.getActiveEffects(game);
   for (const match of matches) {
     const damage = GameUtils.computeMatchDamage(game, match);
-    battleInfo.value?.dealDamageToEnemy(damage, match.color);
+    await battleInfo.value?.dealDamageToEnemy(damage, match.color);
     for (const effect of activeEffects) {
       if (effect.matchEffect) {
-        effect.matchEffect(battleContext, match);
+        await effect.matchEffect(battleContext, match);
       }
     }
   }
 }
 
-function onTurnEnd() {
-  battleInfo.value?.teamInfo?.onTurnEnd();
-  if (battleInfo.value?.areAllEnemiesDead()) {
-    checkBattleEnd();
-    return;
+async function onTurnEnd() {
+  battleContext.setBusy(true);
+  try {
+    await battleInfo.value?.teamInfo?.onTurnEnd();
+    if (battleInfo.value?.areAllEnemiesDead()) {
+      await checkBattleEnd();
+      return;
+    }
+    await battleInfo.value?.enemyTurn();
+  } finally {
+    battleContext.setBusy(false);
   }
-  battleInfo.value?.enemyTurn();
 }
 
 function openShop() {
@@ -213,7 +227,7 @@ async function moveToPlane(plane: string) {
   await GameUtils.nextFloor(game);
   useGameStore().saveGame();
   useUnlockStore().persist();
-  battleContext.healTeam(GameUtils.getTotalHp(game));
+  await battleContext.healTeam(GameUtils.getTotalHp(game));
   planesOpen.value = false;
 }
 

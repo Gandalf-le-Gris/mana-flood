@@ -21,8 +21,8 @@ class ActivatedArtifactRechargeEffect extends ActivatedEffect {
     this.strength = strength;
   }
 
-  execute(context: BattleContext, { sourceIndex }: { sourceIndex: number } ): boolean {
-    context.rechargeArtifact(sourceIndex, 1);
+  async execute(context: BattleContext, { sourceIndex }: { sourceIndex: number } ): Promise<boolean> {
+    await context.rechargeArtifact(sourceIndex, 1);
     return true;
   }
 

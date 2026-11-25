@@ -21,8 +21,8 @@ class DamageEffect extends ActivatedEffect {
     this.strength = strength;
   }
 
-  execute(context: BattleContext): boolean {
-    context.damageEnemy(this.strength.value);
+  async execute(context: BattleContext): Promise<boolean> {
+    await context.damageEnemy(this.strength.value);
     return true;
   }
 }

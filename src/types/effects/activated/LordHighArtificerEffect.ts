@@ -4,10 +4,10 @@ import { ActivatedEffect } from './ActivatedEffect';
 class LordHighArtificerEffect extends ActivatedEffect {
   id = 'lord-high-artificer';
   cooldown = 10;
-  execute(context: BattleContext) {
+  async execute(context: BattleContext) {
     for (let i = 0; i < context.game.artifactCooldowns.length; i++) {
       if (context.game.artifactCooldowns[i]) {
-        context.rechargeArtifact(i, 9999);
+        await context.rechargeArtifact(i, 9999);
       }
     }
     return true;

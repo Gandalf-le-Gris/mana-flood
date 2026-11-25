@@ -39,15 +39,20 @@ function canActivate(index: number): boolean {
   return spell?.activatedAbility.condition(game, { sourceIndex: index });
 }
 
-function activateSpell(index: number) {
+async function activateSpell(index: number) {
   if (!canActivate(index) || !battleContext) return;
   const spell = spells.value[index];
   if (!spell?.activatedAbility) return;
 
-  game.spells[index] = null;
-  const success = spell.activatedAbility.execute(battleContext, { sourceIndex: index, sourceType: 'spell' });
-  if (!success) {
-    game.spells[index] = spell.name;
+  battleContext.setBusy(true);
+  try {
+    game.spells[index] = null;
+    const success = await spell.activatedAbility.execute(battleContext, { sourceIndex: index, sourceType: 'spell' });
+    if (!success) {
+      game.spells[index] = spell.name;
+    }
+  } finally {
+    battleContext.setBusy(false);
   }
 }
 </script>

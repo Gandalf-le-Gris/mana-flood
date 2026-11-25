@@ -27,9 +27,9 @@ class SacrificeEffect extends ActivatedEffect {
     return game.hp > this.strength.cost;
   }
 
-  execute(context: BattleContext): boolean {
-    context.damageTeam(this.strength.cost);
-    return context.convertOrbs(this.strength.value, 'B');
+  async execute(context: BattleContext): Promise<boolean> {
+    await context.damageTeam(this.strength.cost);
+    return await context.convertOrbs(this.strength.value, 'B');
   }
 }
 

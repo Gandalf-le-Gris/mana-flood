@@ -4,8 +4,8 @@ import { ActivatedEffect } from './ActivatedEffect';
 class ShuffleEffect extends ActivatedEffect {
   id = 'shuffle';
   cooldown = 2;
-  execute(context: BattleContext) {
-    return context.shuffleBoard();
+  async execute(context: BattleContext) {
+    return await context.shuffleBoard();
   }
 }
 

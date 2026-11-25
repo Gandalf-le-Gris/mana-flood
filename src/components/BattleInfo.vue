@@ -66,7 +66,7 @@ function checkEnemiesStatus() {
   }
 }
 
-function dealDamageToEnemy(damage: number, color: ExtendedColor, targetIndex?: number) {
+async function dealDamageToEnemy(damage: number, color: ExtendedColor, targetIndex?: number) {
   if (damage > 0) {
     const target: number = targetIndex !== undefined
       ? targetIndex
@@ -86,37 +86,37 @@ function dealDamageToEnemy(damage: number, color: ExtendedColor, targetIndex?: n
   }
 }
 
-function dealDamageToAllEnemies(damage: number, color: ExtendedColor) {
+async function dealDamageToAllEnemies(damage: number, color: ExtendedColor) {
   for (let i = 0; i < enemies.value.length; i++) {
     if (enemies.value[i].hp > 0) {
-      dealDamageToEnemy(damage, color, i);
+      await dealDamageToEnemy(damage, color, i);
     }
   }
 }
 
-function healTeam(amount: number) {
-  teamInfo.value?.heal(amount);
+async function healTeam(amount: number) {
+  await teamInfo.value?.heal(amount);
 }
 
-function damageTeam(amount: number) {
-  teamInfo.value?.takeDamage(amount);
+async function damageTeam(amount: number) {
+  await teamInfo.value?.takeDamage(amount);
 }
 
-function rechargeCreature(index: number, turns: number) {
-  teamInfo.value?.rechargeCreature(index, turns);
+async function rechargeCreature(index: number, turns: number) {
+  await teamInfo.value?.rechargeCreature(index, turns);
 }
 
-function rechargeArtifact(index: number, turns: number) {
-  teamInfo.value?.rechargeArtifact(index, turns);
+async function rechargeArtifact(index: number, turns: number) {
+  await teamInfo.value?.rechargeArtifact(index, turns);
 }
 
-function enemyTurn() {
+async function enemyTurn() {
   for (const enemy of enemies.value) {
     if (enemy.hp > 0) {
       enemy.timer--;
       if (!enemy.timer) {
         enemy.timer = enemy.speed;
-        teamInfo.value?.takeDamage(GameUtils.computeEnemyDamage(game, enemy, enemies.value.filter(e => e.hp > 0)));
+        await teamInfo.value?.takeDamage(GameUtils.computeEnemyDamage(game, enemy, enemies.value.filter(e => e.hp > 0)));
       }
     }
   }

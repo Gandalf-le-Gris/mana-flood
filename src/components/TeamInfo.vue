@@ -90,7 +90,7 @@ const team = computed<(Creature | null)[]>(() => game.team.map(c => c ? buildCre
 const artifacts = computed<(Artifact | null)[]>(() => game.artifacts.map(c => c ? buildArtifact(c) : null));
 const enchantments = computed<(Enchantment | null)[]>(() => game.enchantments.map(c => c ? buildEnchantment(c) : null));
 
-function onTurnEnd() {
+async function onTurnEnd() {
   if (game.cooldowns) {
     for (let i = 0; i < game.cooldowns.length; i++) {
       if (game.cooldowns[i] > 0) {
@@ -108,7 +108,7 @@ function onTurnEnd() {
 
   for (const effect of GameUtils.getActiveEffects(game)) {
     if (battleContext && effect.trigger === EffectTrigger.TURN_START && effect.effect) {
-      effect.effect(battleContext);
+      await effect.effect(battleContext);
     }
   }
 }
@@ -128,49 +128,59 @@ function canActivateArtifact(index: number): boolean {
   return (game.artifactCooldowns?.[index] ?? 0) <= 0 && artifact?.activatedAbility.condition(game, { sourceIndex: index });
 }
 
-function triggerAbility(index: number) {
+async function triggerAbility(index: number) {
   if (!canActivate(index) || !battleContext) return;
   const creature = team.value[index];
   if (!creature?.activatedAbility) return;
 
-  const ability = creature.activatedAbility;
-  const success = ability.execute(battleContext, { sourceIndex: index, sourceType: 'creature' });
-  if (success) {
-    game.cooldowns[index] = ability.cooldown;
+  battleContext.setBusy(true);
+  try {
+    const ability = creature.activatedAbility;
+    const success = await ability.execute(battleContext, { sourceIndex: index, sourceType: 'creature' });
+    if (success) {
+      game.cooldowns[index] = ability.cooldown;
+    }
+  } finally {
+    battleContext.setBusy(false);
   }
 }
 
-function triggerArtifactAbility(index: number) {
+async function triggerArtifactAbility(index: number) {
   if (!canActivateArtifact(index) || !battleContext) return;
   const artifact = artifacts.value[index];
   if (!artifact?.activatedAbility) return;
 
-  const ability = artifact.activatedAbility;
-  const success = ability.execute(battleContext, { sourceIndex: index, sourceType: 'artifact' });
-  if (success) {
-    game.artifactCooldowns[index] = ability.cooldown;
+  battleContext.setBusy(true);
+  try {
+    const ability = artifact.activatedAbility;
+    const success = await ability.execute(battleContext, { sourceIndex: index, sourceType: 'artifact' });
+    if (success) {
+      game.artifactCooldowns[index] = ability.cooldown;
+    }
+  } finally {
+    battleContext.setBusy(false);
   }
 }
 
-function takeDamage(damage: number) {
+async function takeDamage(damage: number) {
   game.hp -= damage;
   CreatureUtils.visualDamage(damage, 'C', healthBar.value?.$el);
 }
 
-function heal(amount: number) {
+async function heal(amount: number) {
   if (amount > 0) {
     game.hp = Math.min(GameUtils.getTotalHp(game), game.hp + amount);
     CreatureUtils.visualDamage(amount, 'G', healthBar.value?.$el);
   }
 }
 
-function rechargeCreature(index: number, turns: number) {
+async function rechargeCreature(index: number, turns: number) {
   if (game.cooldowns[index]) {
     game.cooldowns[index] = Math.max(0, game.cooldowns[index] - turns);
   }
 }
 
-function rechargeArtifact(index: number, turns: number) {
+async function rechargeArtifact(index: number, turns: number) {
   if (game.artifactCooldowns[index]) {
     game.artifactCooldowns[index] = Math.max(0, game.artifactCooldowns[index] - turns);
   }

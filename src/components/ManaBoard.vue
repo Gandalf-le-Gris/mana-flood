@@ -79,7 +79,7 @@ const getOrbStyle = (orb: Orb) => {
 
 const getOrbAt = (r: number, c: number) => orbs.value.find(o => o.r === r && o.c === c);
 
-function initOrbs() {
+async function initOrbs() {
   const newOrbs: Orb[] = [];
   for (let r = 0; r < rows.value; r++) {
     for (let c = 0; c < cols.value; c++) {
@@ -88,7 +88,7 @@ function initOrbs() {
   }
   orbs.value = newOrbs;
   if (findMatches().length) {
-    initOrbs();
+    await initOrbs();
   }
 }
 
@@ -109,14 +109,14 @@ async function processMatches() {
   await delay(400);
 
   emit('match', matches);
-  collapseColumns();
-  refillBoard();
+  await collapseColumns();
+  await refillBoard();
   await delay(500);
 
   await processMatches();
 }
 
-function collapseColumns() {
+async function collapseColumns() {
   for (let c = 0; c < cols.value; c++) {
     let emptyRow = rows.value - 1;
     for (let r = rows.value - 1; r >= 0; r--) {
@@ -131,7 +131,7 @@ function collapseColumns() {
   }
 }
 
-function refillBoard() {
+async function refillBoard() {
   const activeEffects: Effect[] = GameUtils.getActiveEffects(game.value);
   const weights: Record<ExtendedColor, number> = {
     W: 1,
@@ -269,7 +269,7 @@ function findMatches(): MatchGroup[] {
   return finalGroups;
 }
 
-function shuffleOrbs() {
+async function shuffleOrbs() {
   let attempts = 0;
   const maxAttempts = 100;
 
@@ -292,7 +292,7 @@ function shuffleOrbs() {
   }
 
   if (attempts >= maxAttempts) {
-    initOrbs();
+    await initOrbs();
   }
 }
 
@@ -362,7 +362,7 @@ function onMouseMove(e: MouseEvent) {
   }
 }
 
-function onMouseUp() {
+async function onMouseUp() {
   stopTimer();
 
   isDragging.value = false;
@@ -374,7 +374,7 @@ function onMouseUp() {
   window.removeEventListener('mousemove', onMouseMove);
   window.removeEventListener('mouseup', onMouseUp);
 
-  processMatches();
+  await processMatches();
 }
 
 const totalTimer = computed<number>(() => GameUtils.getTotalTimer(game.value));
@@ -386,11 +386,11 @@ function startTimer() {
   timerTimeout.value = setInterval(decreaseTimer, 100);
 }
 
-function decreaseTimer() {
+async function decreaseTimer() {
   timer.value -= .1;
   if (timer.value <= 0) {
     stopTimer();
-    onMouseUp();
+    await onMouseUp();
   }
 }
 
@@ -399,58 +399,71 @@ function stopTimer() {
   clearInterval(timerTimeout.value);
 }
 
-function convertOrbs(count: number, toColor: ExtendedColor, fromColor?: ExtendedColor): boolean {
-  if (isProcessing.value || isDragging.value || props.disabled) return false;
+async function convertOrbs(count: number, toColor: ExtendedColor, fromColor?: ExtendedColor): Promise<boolean> {
+  if (isProcessing.value || isDragging.value) return false;
+  isProcessing.value = true;
+  try {
+    const eligibleOrbs = orbs.value.filter(o => {
+      if (fromColor) {
+        return o.color === fromColor && o.color !== toColor;
+      }
+      return o.color !== toColor;
+    });
 
-  const eligibleOrbs = orbs.value.filter(o => {
-    if (fromColor) {
-      return o.color === fromColor && o.color !== toColor;
+    if (eligibleOrbs.length === 0) return false;
+    if (count >= 3 && GameUtils.isEffectActive(game.value, 'shared.enhanced-conversion')) {
+      count += 1;
     }
-    return o.color !== toColor;
-  });
 
-  if (eligibleOrbs.length === 0) return false;
-  if (count >= 3 && GameUtils.isEffectActive(game.value, 'shared.enhanced-conversion')) {
-    count += 1;
+    const shuffled = [...eligibleOrbs].sort(() => Math.random() - 0.5);
+    const selected = shuffled.slice(0, count);
+
+    for (const orb of selected) {
+      orb.color = toColor;
+    }
+
+    return true;
+  } finally {
+    isProcessing.value = false;
   }
-
-  const shuffled = [...eligibleOrbs].sort(() => Math.random() - 0.5);
-  const selected = shuffled.slice(0, count);
-
-  for (const orb of selected) {
-    orb.color = toColor;
-  }
-
-  return true;
 }
 
-function destroyOrbs(count: number, avoidColor?: ExtendedColor): boolean {
-  if (isProcessing.value || isDragging.value || props.disabled) return false;
+async function destroyOrbs(count: number, avoidColor?: ExtendedColor): Promise<boolean> {
+  if (isProcessing.value || isDragging.value) return false;
+  isProcessing.value = true;
+  try {
+    const eligibleOrbs = orbs.value.filter(o => o.color !== avoidColor);
 
-  const eligibleOrbs = orbs.value.filter(o => o.color !== avoidColor);
+    if (eligibleOrbs.length === 0) return false;
 
-  if (eligibleOrbs.length === 0) return false;
+    const shuffled = [...eligibleOrbs].sort(() => Math.random() - 0.5);
+    const selected = shuffled.slice(0, count);
 
-  const shuffled = [...eligibleOrbs].sort(() => Math.random() - 0.5);
-  const selected = shuffled.slice(0, count);
+    const coordsToRemove = new Set(
+      selected.map(c => `${c.r},${c.c}`)
+    );
+    orbs.value = orbs.value.filter(o => !coordsToRemove.has(`${o.r},${o.c}`));
+    await collapseColumns();
+    await refillBoard();
 
-  const coordsToRemove = new Set(
-    selected.map(c => `${c.r},${c.c}`)
-  );
-  orbs.value = orbs.value.filter(o => !coordsToRemove.has(`${o.r},${o.c}`));
-  collapseColumns();
-  refillBoard();
-
-  return true;
+    return true;
+  } finally {
+    isProcessing.value = false;
+  }
 }
 
-function shuffleBoard(): boolean {
-  if (isProcessing.value || isDragging.value || props.disabled) return false;
-  const colors = orbs.value.map(o => o.color).sort(() => Math.random() - 0.5);
-  orbs.value.forEach((orb, i) => {
-    orb.color = colors[i];
-  });
-  return true;
+async function shuffleBoard(): Promise<boolean> {
+  if (isProcessing.value || isDragging.value) return false;
+  isProcessing.value = true;
+  try {
+    const colors = orbs.value.map(o => o.color).sort(() => Math.random() - 0.5);
+    orbs.value.forEach((orb, i) => {
+      orb.color = colors[i];
+    });
+    return true;
+  } finally {
+    isProcessing.value = false;
+  }
 }
 
 function isBusy(): boolean {
