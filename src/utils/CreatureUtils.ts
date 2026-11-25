@@ -58,7 +58,6 @@ export class CreatureUtils {
   }
 
   static getEffectiveAffinities(creature: Creature, index?: number, game?: Game): Record<ExtendedColor, number> {
-      console.log(index, game)
     if (!game || index == undefined) {
       return creature.colorAffinity;
     }
@@ -86,9 +85,7 @@ export class CreatureUtils {
     for (let i = 0; i < game.artifacts.length; i++) {
       if (game.artifacts[i]) {
         for (const effect of buildArtifact(game.artifacts[i]!).teamEffects) {
-          console.log(effect)
           if (effect.affinityModifier && (!effect.activeCondition || effect.activeCondition(game))) {
-            console.log('yes')
             res = Math.abs(index - i) === 0
               ? mergeAffinities(res, getAffinityForDistance(effect.affinityModifier, 0))
               : Math.abs(index - i) === 1

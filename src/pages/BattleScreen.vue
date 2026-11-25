@@ -83,7 +83,8 @@ import { useGameStore } from '@/stores/gameStore';
 import { useUnlockStore } from '@/stores/unlocksStore';
 import type { BattleContext } from '@/types/BattleContext';
 import type { ExtendedColor } from '@/types/Color';
-import type { Effect } from '@/types/effects/Effect';
+import { Effect } from '@/types/effects/Effect';
+import { EffectTrigger } from '@/types/effects/EffectTrigger';
 import { Game } from '@/types/Game';
 import { buildPlane } from '@/types/planes/planes';
 import { insertUnique } from '@/utils/ArrayUtils';
@@ -116,6 +117,7 @@ async function checkBattleEnd() {
 
   if (allEnemiesDead && !boardBusy) {
     isBattleEnding.value = true;
+    await GameUtils.broadcastEvent(battleContext, EffectTrigger.BATTLE_END);
     await sleep(1000);
     if (game.floor === GameUtils.FINAL_FLOOR) {
       resultsOpen.value = true;

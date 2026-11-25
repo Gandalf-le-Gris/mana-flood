@@ -56,23 +56,23 @@
 </template>
 
 <script setup lang="ts">
+import { useGameStore } from '@/stores/gameStore';
+import type { Artifact } from '@/types/artifacts/Artifact';
+import { buildArtifact } from '@/types/artifacts/artifacts';
+import type { BattleContext } from '@/types/BattleContext';
+import type { Creature } from '@/types/creatures/Creature';
+import { buildCreature } from '@/types/creatures/creatures';
+import { EffectTrigger } from '@/types/effects/EffectTrigger.ts';
+import type { Enchantment } from '@/types/enchantments/Enchantment.ts';
+import { buildEnchantment } from '@/types/enchantments/enchantments.ts';
+import type { Game } from '@/types/Game';
+import { CreatureUtils } from '@/utils/CreatureUtils';
+import { GameUtils } from '@/utils/GameUtils.ts';
+import { computed, inject, ref } from 'vue';
 import ArtifactPortrait from './ArtifactPortrait.vue';
 import CharacterPortrait from './CharacterPortrait.vue';
 import EnchantmentPortrait from './EnchantmentPortrait.vue';
 import HealthBar from './HealthBar.vue';
-import { useGameStore } from '@/stores/gameStore';
-import type { Creature } from '@/types/creatures/Creature';
-import { buildCreature } from '@/types/creatures/creatures';
-import type { Game } from '@/types/Game';
-import { computed, inject, ref } from 'vue';
-import type { Artifact } from '@/types/artifacts/Artifact';
-import { buildArtifact } from '@/types/artifacts/artifacts';
-import { CreatureUtils } from '@/utils/CreatureUtils';
-import type { BattleContext } from '@/types/BattleContext';
-import { buildEnchantment } from '@/types/enchantments/enchantments.ts';
-import type { Enchantment } from '@/types/enchantments/Enchantment.ts';
-import { GameUtils } from '@/utils/GameUtils.ts';
-import { EffectTrigger } from '@/types/effects/EffectTrigger.ts';
 
 const game: Game = useGameStore().current!;
 const battleContext = inject<BattleContext | null>('battleContext', null);
@@ -106,10 +106,8 @@ async function onTurnEnd() {
     }
   }
 
-  for (const effect of GameUtils.getActiveEffects(game)) {
-    if (battleContext && effect.trigger === EffectTrigger.TURN_START && effect.effect) {
-      await effect.effect(battleContext);
-    }
+  if (battleContext) {
+    await GameUtils.broadcastEvent(battleContext, EffectTrigger.TURN_END);
   }
 }
 
@@ -124,7 +122,7 @@ function canActivateArtifact(index: number): boolean {
   if (!battleContext || !battleContext.canAct()) return false;
   const artifact = artifacts.value[index];
   if (!artifact?.activatedAbility) return false;
-  if (GameUtils.isEffectActive(game, 'enemy.artifact-lock')) return false;
+  if (GameUtils.countEffectActive(game, 'enemy.artifact-lock')) return false;
   return (game.artifactCooldowns?.[index] ?? 0) <= 0 && artifact?.activatedAbility.condition(game, { sourceIndex: index });
 }
 

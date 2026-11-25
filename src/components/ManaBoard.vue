@@ -269,33 +269,6 @@ function findMatches(): MatchGroup[] {
   return finalGroups;
 }
 
-async function shuffleOrbs() {
-  let attempts = 0;
-  const maxAttempts = 100;
-
-  while (attempts < maxAttempts) {
-    attempts++;
-
-    for (let i = orbs.value.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [orbs.value[i], orbs.value[j]] = [orbs.value[j], orbs.value[i]];
-    }
-
-    orbs.value.forEach((orb, index) => {
-      orb.r = Math.floor(index / cols.value);
-      orb.c = index % cols.value;
-    });
-
-    if (findMatches().length === 0) {
-      break;
-    }
-  }
-
-  if (attempts >= maxAttempts) {
-    await initOrbs();
-  }
-}
-
 const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
 function onMouseDown(e: MouseEvent, orb: Orb) {
@@ -411,8 +384,8 @@ async function convertOrbs(count: number, toColor: ExtendedColor, fromColor?: Ex
     });
 
     if (eligibleOrbs.length === 0) return false;
-    if (count >= 3 && GameUtils.isEffectActive(game.value, 'shared.enhanced-conversion')) {
-      count += 1;
+    if (count >= 3) {
+      count += GameUtils.countEffectActive(game.value, 'shared.enhanced-conversion');
     }
 
     const shuffled = [...eligibleOrbs].sort(() => Math.random() - 0.5);
@@ -421,6 +394,8 @@ async function convertOrbs(count: number, toColor: ExtendedColor, fromColor?: Ex
     for (const orb of selected) {
       orb.color = toColor;
     }
+
+    await delay(250);
 
     return true;
   } finally {
@@ -443,8 +418,10 @@ async function destroyOrbs(count: number, avoidColor?: ExtendedColor): Promise<b
       selected.map(c => `${c.r},${c.c}`)
     );
     orbs.value = orbs.value.filter(o => !coordsToRemove.has(`${o.r},${o.c}`));
+    await delay(200);
     await collapseColumns();
     await refillBoard();
+    await delay(200);
 
     return true;
   } finally {
@@ -460,6 +437,7 @@ async function shuffleBoard(): Promise<boolean> {
     orbs.value.forEach((orb, i) => {
       orb.color = colors[i];
     });
+    await delay(500);
     return true;
   } finally {
     isProcessing.value = false;

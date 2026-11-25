@@ -12,7 +12,7 @@ export class Effect {
   orbRateModifier?: Partial<Record<ExtendedColor, number>>;
   affinityModifier?: Partial<Record<ExtendedColor, [number, number, number]>>;
   matchEffect?: (context: BattleContext, match: MatchGroup) => Promise<void> | void;
-  effect?: (context: BattleContext) => Promise<void> | void;
+  effect?: (context: BattleContext, params?: { sourceIndex: number }) => Promise<void> | void;
 
   withId(id: string): Effect {
     this.id = id;

@@ -7,6 +7,8 @@ import { ShopUtils } from './ShopUtils';
 import { sleep } from './TsUtils';
 import { buildArtifact } from "@/types/artifacts/artifacts";
 import { buildEnchantment } from "@/types/enchantments/enchantments";
+import type { BattleContext } from '@/types/BattleContext';
+import type { EffectTrigger } from '@/types/effects/EffectTrigger';
 
 interface MatchGroup {
   color: ExtendedColor;
@@ -82,8 +84,43 @@ export class GameUtils {
       .filter(e => !e.activeCondition || e.activeCondition(game));
   }
 
-  static isEffectActive(game: Game, effectId: string) {
+  static countEffectActive(game: Game, effectId: string): number {
     return this.getActiveEffects(game)
-      .find(e => e.id === effectId);
+      .filter(e => e.id === effectId)
+      .length;
+  }
+
+  static async broadcastEvent(battleContext: BattleContext, trigger: EffectTrigger) {
+    for (const e of battleContext.game.currentEnemies.flatMap(e => buildCreature(e).enemyEffects)) {
+      if (e.trigger === trigger && e.effect && (!e.activeCondition || e.activeCondition(battleContext.game)))
+      await e.effect(battleContext);
+    }
+    for (let i = 0; i < battleContext.game.team.length; i++) {
+      const c = battleContext.game.team[i];
+      if (c) {
+        for (const e of buildCreature(c).teamEffects) {
+          if (e.trigger === trigger && e.effect && (!e.activeCondition || e.activeCondition(battleContext.game)))
+          await e.effect(battleContext, { sourceIndex: i });
+        }
+      }
+    }
+    for (let i = 0; i < battleContext.game.artifacts.length; i++) {
+      const a = battleContext.game.artifacts[i];
+      if (a) {
+        for (const e of buildArtifact(a).teamEffects) {
+          if (e.trigger === trigger && e.effect && (!e.activeCondition || e.activeCondition(battleContext.game)))
+          await e.effect(battleContext, { sourceIndex: i });
+        }
+      }
+    }
+    for (let i = 0; i < battleContext.game.enchantments.length; i++) {
+      const a = battleContext.game.enchantments[i];
+      if (a) {
+        for (const e of buildEnchantment(a).teamEffects) {
+          if (e.trigger === trigger && e.effect && (!e.activeCondition || e.activeCondition(battleContext.game)))
+          await e.effect(battleContext, { sourceIndex: i });
+        }
+      }
+    }
   }
 }

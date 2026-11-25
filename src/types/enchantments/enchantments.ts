@@ -1,8 +1,14 @@
 import type { Enchantment } from "./Enchantment";
+import { FertileGround } from './FertileGround';
 import { MirarisWake } from "./MirarisWake";
+import { Pacifism } from './Pacifism';
+import { TeferisTutelage } from './TeferisTutelage';
 
 export const enchantments: typeof Enchantment[] = [
   MirarisWake,
+  Pacifism,
+  TeferisTutelage,
+  FertileGround,
 ];
 
 export function buildEnchantment(enchantment: string | Enchantment): Enchantment {

@@ -26,7 +26,7 @@ import EnemyFrame from './EnemyFrame.vue';
 import TeamInfo from './TeamInfo.vue';
 import { useGameStore } from '@/stores/gameStore';
 import type { ExtendedColor } from '@/types/Color';
-import { Creature } from '@/types/creatures/Creature';
+import { Creature, Rarity } from '@/types/creatures/Creature';
 import { buildCreature } from '@/types/creatures/creatures';
 import type { Game } from '@/types/Game';
 import { CreatureUtils } from '@/utils/CreatureUtils';
@@ -140,6 +140,16 @@ function rebuildEnemies() {
   enemies.value.forEach(e => {
     e.hp = CreatureUtils.getEnemyHp(e, game);
     e.timer = e.speed;
+
+    switch (CreatureUtils.getRarity(e)) {
+      case Rarity.COMMON:
+        e.timer += GameUtils.countEffectActive(game, 'shared.minor-delay');
+      case Rarity.UNCOMMON:
+        e.timer += GameUtils.countEffectActive(game, 'shared.delay');
+      case Rarity.RARE:
+        e.timer += GameUtils.countEffectActive(game, 'shared.major-delay');
+      default:
+    }
   });
 }
 

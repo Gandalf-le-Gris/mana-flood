@@ -3,5 +3,6 @@ export enum EffectTrigger {
   TRIGGER,
   ORB_RATE,
   MATCH,
-  TURN_START,
+  TURN_END,
+  BATTLE_END,
 }

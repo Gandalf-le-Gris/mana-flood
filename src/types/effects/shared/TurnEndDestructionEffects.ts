@@ -12,7 +12,7 @@ class DestructionStrength {
 }
 
 class TurnEndDestructionEffect extends Effect {
-  trigger = EffectTrigger.TURN_START;
+  trigger = EffectTrigger.TURN_END;
 
   readonly strength: DestructionStrength;
   readonly color: ExtendedColor;
