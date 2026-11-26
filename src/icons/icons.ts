@@ -60,6 +60,7 @@ import Knowledge from './Knowledge.vue';
 import Boss from './Boss.vue';
 import Enchantment from './Enchantment.vue';
 import Spell from './Spell.vue';
+import Stopwatch from './Stopwatch.vue';
 
 const customSvgNameToComponent: any = {
   B,
@@ -122,6 +123,7 @@ const customSvgNameToComponent: any = {
   'keyword-Trample': KeywordTrample,
   'keyword-Vigilance': KeywordVigilance,
   boss: Boss,
+  stopwatch: Stopwatch,
 };
 
 export function iconExists(icon: string) {

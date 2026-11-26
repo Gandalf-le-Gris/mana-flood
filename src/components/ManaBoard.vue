@@ -9,6 +9,8 @@
             :color="orb.color"
             :size="orbSize"
             :active="activeOrb?.uuid === orb.uuid"
+            :converting="orb.converting"
+            :destroying="orb.destroying"
             :style="{
               '--x': `${orb.c * orbSize}px`,
               '--y': `${orb.r * orbSize}px`,
@@ -71,7 +73,7 @@ const boardStyle = computed(() => ({
 const getOrbStyle = (orb: Orb) => {
   const isHeld = activeOrb.value?.uuid === orb.uuid;
   return {
-    zIndex: isHeld ? 1000 : orb.r + 10,
+    zIndex: isHeld ? 1000 : (orb.converting || orb.destroying ? 500 : orb.r + 10),
     pointerEvents: isHeld ? 'none' : 'auto',
     cursor: isProcessing.value || props.disabled ? 'not-allowed' : 'grab'
   };
@@ -392,10 +394,20 @@ async function convertOrbs(count: number, toColor: ExtendedColor, fromColor?: Ex
     const selected = shuffled.slice(0, count);
 
     for (const orb of selected) {
+      orb.converting = true;
+    }
+
+    await delay(250);
+
+    for (const orb of selected) {
       orb.color = toColor;
     }
 
     await delay(250);
+
+    for (const orb of selected) {
+      orb.converting = false;
+    }
 
     return true;
   } finally {
@@ -413,6 +425,12 @@ async function destroyOrbs(count: number, avoidColor?: ExtendedColor): Promise<b
 
     const shuffled = [...eligibleOrbs].sort(() => Math.random() - 0.5);
     const selected = shuffled.slice(0, count);
+
+    for (const orb of selected) {
+      orb.destroying = true;
+    }
+
+    await delay(500);
 
     const coordsToRemove = new Set(
       selected.map(c => `${c.r},${c.c}`)
@@ -500,7 +518,7 @@ onMounted(initOrbs);
   will-change: transform;
 
   &:not(.isDragging) {
-    transition: all 0.5s cubic-bezier(0.34, 1.36, 0.64, 1);
+    transition: all 0.5s cubic-bezier(0.34, 1.36, 0.64, 1), z-index 0s;
   }
 }
 

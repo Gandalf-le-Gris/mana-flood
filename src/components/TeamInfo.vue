@@ -17,6 +17,7 @@
             @click="triggerAbility(index)"
           >
             <character-portrait
+              :ref="(el) => setCreatureRef(el, index)"
               :character="creature"
               :cooldown="game.cooldowns?.[index]"
               :is-ready="canActivate(index)"
@@ -36,6 +37,7 @@
             @click="triggerArtifactAbility(index)"
           >
             <artifact-portrait
+              :ref="(el) => setArtifactRef(el, index)"
               :artifact
               :cooldown="game.artifactCooldowns?.[index]"
               :is-ready="canActivateArtifact(index)"
@@ -85,6 +87,16 @@ if (!game.artifactCooldowns) {
 }
 
 const healthBar = ref<InstanceType<typeof HealthBar> | null>(null);
+const creatureRefs = ref<(InstanceType<typeof CharacterPortrait> | null)[]>([]);
+const artifactRefs = ref<(InstanceType<typeof ArtifactPortrait> | null)[]>([]);
+
+function setCreatureRef(el: any, index: number) {
+  creatureRefs.value[index] = el;
+}
+
+function setArtifactRef(el: any, index: number) {
+  artifactRefs.value[index] = el;
+}
 
 const team = computed<(Creature | null)[]>(() => game.team.map(c => c ? buildCreature(c) : null));
 const artifacts = computed<(Artifact | null)[]>(() => game.artifacts.map(c => c ? buildArtifact(c) : null));
@@ -176,11 +188,17 @@ async function rechargeCreature(index: number, turns: number) {
   if (game.cooldowns[index]) {
     game.cooldowns[index] = Math.max(0, game.cooldowns[index] - turns);
   }
+  if (team.value[index]) {
+    await creatureRefs.value[index]?.triggerRecharge();
+  }
 }
 
 async function rechargeArtifact(index: number, turns: number) {
   if (game.artifactCooldowns[index]) {
     game.artifactCooldowns[index] = Math.max(0, game.artifactCooldowns[index] - turns);
+  }
+  if (artifacts.value[index]) {
+    await artifactRefs.value[index]?.triggerRecharge();
   }
 }
 

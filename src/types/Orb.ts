@@ -5,6 +5,8 @@ export class Orb {
   color: ExtendedColor;
   r: number;
   c: number;
+  converting: boolean = false;
+  destroying: boolean = false;
 
   public constructor(color: ExtendedColor, r: number, c: number) {
     this.color = color;

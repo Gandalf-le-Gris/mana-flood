@@ -2,6 +2,7 @@
   <div>
     <div
       class="wrapper"
+      :class="{ converting, destroying }"
       :style="`width: ${size}px; height: ${size}px;`"
     >
       <div
@@ -53,11 +54,16 @@
 import type { ExtendedColor } from '@/types/Color';
 import { ref } from 'vue';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   color: ExtendedColor,
   size: number,
   active: boolean,
-}>();
+  converting?: boolean,
+  destroying?: boolean,
+}>(), {
+  converting: false,
+  destroying: false,
+});
 const seed = ref<number>(Math.floor(Math.random() * 1000));
 const speed = ref<number>(Math.random() * 10 + 15);
 const uuid = ref<string>(crypto.randomUUID());
@@ -66,6 +72,14 @@ const uuid = ref<string>(crypto.randomUUID());
 <style lang="scss" scoped>
 .wrapper {
   position: relative;
+
+  &.converting {
+    animation: orb-converting 500ms ease-in-out forwards;
+  }
+
+  &.destroying {
+    animation: orb-destroying 500ms ease-in-out forwards, orb-shake 80ms ease-in-out infinite;
+  }
 
   :deep(.v-icon) {
     position: absolute;
@@ -90,5 +104,47 @@ const uuid = ref<string>(crypto.randomUUID());
   0% { transform: rotate(0deg) scale(1); }
   50% { transform: rotate(5deg) scale(1.02); }
   100% { transform: rotate(-5deg) scale(0.98); }
+}
+
+@keyframes orb-converting {
+  0% {
+    filter: brightness(1) drop-shadow(0 0 0 rgba(255, 255, 255, 0));
+  }
+  50% {
+    filter: brightness(100) drop-shadow(0 0 16px white);
+  }
+  100% {
+    filter: brightness(1) drop-shadow(0 0 0 rgba(255, 255, 255, 0));
+  }
+}
+
+@keyframes orb-destroying {
+  0% {
+    filter: brightness(1) drop-shadow(0 0 0 rgba(255, 23, 68, 0));
+  }
+  50% {
+    filter: brightness(1.4) drop-shadow(0 0 12px #ff1744) drop-shadow(0 0 24px #ff1744);
+  }
+  100% {
+    filter: brightness(1.8) drop-shadow(0 0 18px #ff1744) drop-shadow(0 0 36px #d50000);
+  }
+}
+
+@keyframes orb-shake {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  20% {
+    transform: translate(-1.5px, 1px) rotate(-0.5deg);
+  }
+  40% {
+    transform: translate(1.5px, -1px) rotate(0.5deg);
+  }
+  60% {
+    transform: translate(-1px, -1.5px) rotate(0.3deg);
+  }
+  80% {
+    transform: translate(1px, 1.5px) rotate(-0.3deg);
+  }
 }
 </style>

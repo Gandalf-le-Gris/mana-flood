@@ -40,6 +40,19 @@
         />
         <span>{{ cost }}</span>
       </div>
+      <div
+        v-if="isRecharging"
+        :key="rechargeKey"
+        class="recharge-overlay"
+      >
+        <div class="recharge-halo">
+          <v-icon
+            icon="mtg:stopwatch"
+            :size="rechargeIconSize"
+            class="recharge-icon"
+          />
+        </div>
+      </div>
     </div>
     <character-detail-dialog
       v-if="character"
@@ -52,7 +65,7 @@
 
 <script setup lang="ts">
 import type { Creature } from '@/types/creatures/Creature';
-import { computed, ref, type Ref } from 'vue';
+import { computed, onBeforeUnmount, ref, type Ref } from 'vue';
 import CharacterDetailDialog from './CharacterDetailDialog.vue';
 
 const props = withDefaults(defineProps<{
@@ -95,6 +108,38 @@ const ready = computed(() => props.isReady === true);
 const badgeIconSize = computed(() => Math.max(16, Math.round(props.size * 0.13)));
 const badgeFontSize = computed(() => `${Math.max(16, Math.round(props.size * 0.14))}px`);
 const badgePadding = computed(() => `${Math.round(props.size * 0.03)}px ${Math.round(props.size * 0.07)}px`);
+
+const isRecharging = ref(false);
+const rechargeKey = ref(0);
+const rechargeIconSize = computed(() => Math.max(32, Math.round(props.size * 0.45)));
+let rechargeTimer: ReturnType<typeof setTimeout> | null = null;
+
+function triggerRecharge(): Promise<void> {
+  if (rechargeTimer) {
+    clearTimeout(rechargeTimer);
+    rechargeTimer = null;
+  }
+  rechargeKey.value++;
+  isRecharging.value = true;
+  return new Promise(resolve => {
+    rechargeTimer = setTimeout(() => {
+      isRecharging.value = false;
+      rechargeTimer = null;
+      resolve();
+    }, 750);
+  });
+}
+
+onBeforeUnmount(() => {
+  if (rechargeTimer) {
+    clearTimeout(rechargeTimer);
+    rechargeTimer = null;
+  }
+});
+
+defineExpose({
+  triggerRecharge,
+});
 </script>
 
 <style lang="scss" scoped>
@@ -192,5 +237,59 @@ const badgePadding = computed(() => `${Math.round(props.size * 0.03)}px ${Math.r
   height: 100%;
   width: 100%;
   background: #000a;
+}
+
+.recharge-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 10;
+  animation: recharge-animation 750ms ease-in-out forwards;
+}
+
+.recharge-halo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(10, 15, 28, 0.7) 0%, rgba(10, 15, 28, 0.4) 45%, transparent 70%);
+  padding: 10px;
+}
+
+.recharge-icon {
+  color: #29b6f6;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.95))
+          drop-shadow(0 0 5px rgba(0, 0, 0, 0.85))
+          drop-shadow(0 0 10px rgba(41, 182, 246, 0.9))
+          drop-shadow(0 0 18px rgba(41, 182, 246, 0.6));
+}
+
+@keyframes recharge-animation {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  25% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  75% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
 }
 </style>
