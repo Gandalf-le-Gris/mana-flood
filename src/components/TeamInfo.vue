@@ -119,7 +119,7 @@ async function onTurnEnd() {
   }
 
   if (battleContext) {
-    await GameUtils.broadcastEvent(battleContext, EffectTrigger.TURN_END);
+    await GameUtils.broadcastEvent(battleContext, EffectTrigger.TURN_END, {});
   }
 }
 
@@ -146,10 +146,8 @@ async function triggerAbility(index: number) {
   battleContext.setBusy(true);
   try {
     const ability = creature.activatedAbility;
-    const success = await ability.execute(battleContext, { sourceIndex: index, sourceType: 'creature' });
-    if (success) {
-      game.cooldowns[index] = ability.cooldown;
-    }
+    game.cooldowns[index] = ability.cooldown;
+    await ability.execute(battleContext, { sourceIndex: index, sourceType: 'creature' });
   } finally {
     battleContext.setBusy(false);
   }
@@ -163,10 +161,8 @@ async function triggerArtifactAbility(index: number) {
   battleContext.setBusy(true);
   try {
     const ability = artifact.activatedAbility;
-    const success = await ability.execute(battleContext, { sourceIndex: index, sourceType: 'artifact' });
-    if (success) {
-      game.artifactCooldowns[index] = ability.cooldown;
-    }
+    game.artifactCooldowns[index] = ability.cooldown;
+    await ability.execute(battleContext, { sourceIndex: index, sourceType: 'artifact' });
   } finally {
     battleContext.setBusy(false);
   }
@@ -185,7 +181,7 @@ async function heal(amount: number) {
 }
 
 async function rechargeCreature(index: number, turns: number) {
-  if (game.cooldowns[index]) {
+  if (game.cooldowns[index] != undefined) {
     game.cooldowns[index] = Math.max(0, game.cooldowns[index] - turns);
   }
   if (team.value[index]) {
@@ -194,7 +190,7 @@ async function rechargeCreature(index: number, turns: number) {
 }
 
 async function rechargeArtifact(index: number, turns: number) {
-  if (game.artifactCooldowns[index]) {
+  if (game.artifactCooldowns[index] != undefined) {
     game.artifactCooldowns[index] = Math.max(0, game.artifactCooldowns[index] - turns);
   }
   if (artifacts.value[index]) {

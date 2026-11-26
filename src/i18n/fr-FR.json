@@ -40,7 +40,15 @@
       "viashino-pyromancer": "Pyromancien viashino",
       "grizzly-bears": "Grizzlis",
       "voltaic-servant": "Servant voltaïque",
-      "juggernaut": "Djaggernaut"
+      "juggernaut": "Djaggernaut",
+      "combat-thresher": "Batteuse de combat",
+      "spotter-thopter": "Mécanoptère observateur",
+      "forgefire-automaton": "Automate forgefeu",
+      "heavyweight-demolisher": "Démolisseur poids lourd",
+      "perennial-behemoth": "Béhémoth vivace",
+      "universal-automaton": "Automate universel",
+      "loran": "Loran",
+      "venser": "Venser"
     }
   },
   "artifacts": {
@@ -240,14 +248,24 @@
       "major-delay": "Ralentit les ennemis non-boss de 1 tour au début du combat."
     },
     "enemy": {
-      "artifact-lock": "Les capacités des artefacts ne peuvent pas être activées."
+      "artifact-lock": "Les capacités des artefacts ne peuvent pas être activées.",
+      "spell-lock": "Les sorts ne peuvent pas être lancés.",
+      "battle-start-artifact-delay": "Augmente le temps de recharge de tous les artefacts de 3 tours au début du combat."
     },
     "team": {
       "artifact-recharge": "Lorsqu'au moins 5 orbes incolores sont associés, réduit le temps de recharge d'un artefact aléatoire de 1 tour.",
       "battle-end-random-creature-recharge": "À la fin du combat, réduit le temps de recharge d'une créature aléatoire de 1 tour.",
       "battle-end-random-artifact-recharge": "À la fin du combat, réduit le temps de recharge d'un artefact aléatoire de 1 tour.",
       "battle-end-creature-recharge": "À la fin du combat, réduit le temps de recharge de la créature de sa colonne de 1 tour.",
-      "battle-end-artifact-recharge": "À la fin du combat, réduit le temps de recharge de l'artefact de sa colonne de 1 tour."
+      "battle-end-artifact-recharge": "À la fin du combat, réduit le temps de recharge de l'artefact de sa colonne de 1 tour.",
+      "destruction-heal": "Quand un ou plusieurs orbes sont détruits, restaure autant de PV.",
+      "destruction-creature-recharge": "Quand au moins 10 orbes sont détruits, réduit le temps de recharge d'une créature aléatoire de 1 tour.",
+      "destruction-artifact-recharge": "Quand au moins 10 orbes sont détruits, réduit le temps de recharge d'un artefact aléatoire de 1 tour.",
+      "destruction-damage": "Quand un ou plusieurs orbes sont détruits, inflige autant de dégâts à chaque ennemi.",
+      "destruction-destruction": "Quand au moins 10 orbes sont détruits, en détruit 4 de plus.",
+      "destruction-conversion": "Quand au moins 10 orbes sont détruits en évitant une couleur, convertit 3 orbes en cette couleur.",
+      "spell-creature-recharge": "Quand un sort est lancé, réduit le temps de recharge d'une créature aléatoire de 3 tours.",
+      "spell-artifact-recharge": "Quand un sort est lancé, réduit le temps de recharge d'un artefact aléatoire de 3 tours."
     }
   },
   "abilities": {

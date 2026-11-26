@@ -1,6 +1,6 @@
 import type { Color } from "../Color";
 import { Rarity } from "../creatures/Creature";
-import { battleEndRechargeEffects } from '../effects/shared/BattleEndRechargeEffects';
+import { battleEndRechargeEffects } from '../effects/team/BattleEndRechargeEffects';
 import { Enchantment } from "./Enchantment";
 
 export class TeferisTutelage extends Enchantment {

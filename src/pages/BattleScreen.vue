@@ -117,7 +117,7 @@ async function checkBattleEnd() {
 
   if (allEnemiesDead && !boardBusy) {
     isBattleEnding.value = true;
-    await GameUtils.broadcastEvent(battleContext, EffectTrigger.BATTLE_END);
+    await GameUtils.broadcastEvent(battleContext, EffectTrigger.BATTLE_END, {});
     await sleep(1000);
     if (game.floor === GameUtils.FINAL_FLOOR) {
       resultsOpen.value = true;
@@ -143,11 +143,21 @@ const battleContext: BattleContext = {
   },
   async convertOrbs(count: number, toColor: ExtendedColor, fromColor?: ExtendedColor) {
     if (manaBoard.value?.isBusy() || isBattleEnding.value) return false;
-    return (await manaBoard.value?.convertOrbs(count, toColor, fromColor)) ?? false;
+    const res = (await manaBoard.value?.convertOrbs(count, toColor, fromColor)) ?? false;
+    await GameUtils.broadcastEvent(battleContext, EffectTrigger.CONVERSION, {
+      color: toColor,
+      amount: count,
+    });
+    return res;
   },
   async destroyOrbs(count: number, avoidColor?: ExtendedColor) {
     if (manaBoard.value?.isBusy() || isBattleEnding.value) return false;
-    return (await manaBoard.value?.destroyOrbs(count, avoidColor)) ?? false;
+    const res = (await manaBoard.value?.destroyOrbs(count, avoidColor)) ?? false;
+    await GameUtils.broadcastEvent(battleContext, EffectTrigger.DESTRUCTION, {
+      color: avoidColor,
+      amount: count,
+    });
+    return res;
   },
   async shuffleBoard() {
     if (manaBoard.value?.isBusy() || isBattleEnding.value) return false;

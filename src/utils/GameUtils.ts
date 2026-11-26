@@ -15,6 +15,12 @@ interface MatchGroup {
   size: number;
 }
 
+export interface EventParams {
+  sourceIndex?: number,
+  color?: ExtendedColor,
+  amount?: number,
+}
+
 export class GameUtils {
   static FINAL_FLOOR: number = 100;
 
@@ -90,17 +96,17 @@ export class GameUtils {
       .length;
   }
 
-  static async broadcastEvent(battleContext: BattleContext, trigger: EffectTrigger) {
+  static async broadcastEvent(battleContext: BattleContext, trigger: EffectTrigger, params: EventParams) {
     for (const e of battleContext.game.currentEnemies.flatMap(e => buildCreature(e).enemyEffects)) {
       if (e.trigger === trigger && e.effect && (!e.activeCondition || e.activeCondition(battleContext.game)))
-      await e.effect(battleContext);
+      await e.effect(battleContext, params);
     }
     for (let i = 0; i < battleContext.game.team.length; i++) {
       const c = battleContext.game.team[i];
       if (c) {
         for (const e of buildCreature(c).teamEffects) {
           if (e.trigger === trigger && e.effect && (!e.activeCondition || e.activeCondition(battleContext.game)))
-          await e.effect(battleContext, { sourceIndex: i });
+          await e.effect(battleContext, { ...params, sourceIndex: i });
         }
       }
     }
@@ -109,7 +115,7 @@ export class GameUtils {
       if (a) {
         for (const e of buildArtifact(a).teamEffects) {
           if (e.trigger === trigger && e.effect && (!e.activeCondition || e.activeCondition(battleContext.game)))
-          await e.effect(battleContext, { sourceIndex: i });
+          await e.effect(battleContext, { ...params, sourceIndex: i });
         }
       }
     }
@@ -118,7 +124,7 @@ export class GameUtils {
       if (a) {
         for (const e of buildEnchantment(a).teamEffects) {
           if (e.trigger === trigger && e.effect && (!e.activeCondition || e.activeCondition(battleContext.game)))
-          await e.effect(battleContext, { sourceIndex: i });
+          await e.effect(battleContext, { ...params, sourceIndex: i });
         }
       }
     }

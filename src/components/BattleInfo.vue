@@ -25,15 +25,19 @@
 import EnemyFrame from './EnemyFrame.vue';
 import TeamInfo from './TeamInfo.vue';
 import { useGameStore } from '@/stores/gameStore';
+import type { BattleContext } from '@/types/BattleContext.ts';
 import type { ExtendedColor } from '@/types/Color';
 import { Creature, Rarity } from '@/types/creatures/Creature';
 import { buildCreature } from '@/types/creatures/creatures';
+import { EffectTrigger } from '@/types/effects/EffectTrigger.ts';
 import type { Game } from '@/types/Game';
 import { CreatureUtils } from '@/utils/CreatureUtils';
 import { GameUtils } from '@/utils/GameUtils';
-import { onMounted, ref, watch } from 'vue';
+import { sleep } from '@/utils/TsUtils.ts';
+import { inject, onMounted, ref, watch } from 'vue';
 
 const game: Game = useGameStore().current!;
+const battleContext = inject<BattleContext | null>('battleContext', null);
 
 const emit = defineEmits(['battle-end', 'check-victory']);
 
@@ -135,7 +139,7 @@ defineExpose({
   rechargeArtifact,
 });
 
-function rebuildEnemies() {
+async function rebuildEnemies() {
   enemies.value = game.currentEnemies.map(e => buildCreature(e));
   enemies.value.forEach(e => {
     e.hp = CreatureUtils.getEnemyHp(e, game);
@@ -151,6 +155,13 @@ function rebuildEnemies() {
       default:
     }
   });
+
+  battleContext?.setBusy(true);
+  await sleep(1500);
+  if (battleContext) {
+    await GameUtils.broadcastEvent(battleContext, EffectTrigger.BATTLE_START, {});
+  }
+  battleContext?.setBusy(false);
 }
 
 onMounted(() => {

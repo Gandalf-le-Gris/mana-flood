@@ -2,11 +2,12 @@ import type { Game } from '@/types/Game';
 import type { BattleContext } from '../../BattleContext';
 import { Effect } from '../Effect';
 import { EffectTrigger } from '../EffectTrigger';
+import type { EventParams } from '@/utils/GameUtils';
 
 export abstract class ActivatedEffect extends Effect {
   override trigger = EffectTrigger.TRIGGER;
   cooldown: number = 0;
-  condition(game: Game, params?: { sourceIndex: number }): boolean {
+  condition(game: Game, params: EventParams): boolean {
     return true;
   };
   abstract execute(context: BattleContext, params: {

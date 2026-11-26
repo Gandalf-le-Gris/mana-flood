@@ -2,6 +2,7 @@ import type { BattleContext } from '@/types/BattleContext';
 import { Effect } from '../Effect';
 import { EffectTrigger } from '../EffectTrigger';
 import { choiceWithPredicate } from '@/utils/ArrayUtils';
+import type { EventParams } from '@/utils/GameUtils';
 
 class BattleEndRandomCreatureRechargeEffect extends Effect {
   trigger = EffectTrigger.BATTLE_END;
@@ -34,8 +35,8 @@ class BattleEndCreatureRechargeEffect extends Effect {
 
   id = 'team.battle-end-creature-recharge';
 
-  effect = async (context: BattleContext, params?: { sourceIndex: number }) => {
-    if (params?.sourceIndex != undefined && params.sourceIndex >= 0)
+  effect = async (context: BattleContext, params: EventParams) => {
+    if (params.sourceIndex != undefined && params.sourceIndex >= 0)
     await context.rechargeCreature(params.sourceIndex, 1);
   }
 }
@@ -45,8 +46,8 @@ class BattleEndArtifactRechargeEffect extends Effect {
 
   id = 'team.battle-end-artifact-recharge';
 
-  effect = async (context: BattleContext, params?: { sourceIndex: number }) => {
-    if (params?.sourceIndex != undefined && params.sourceIndex >= 0)
+  effect = async (context: BattleContext, params: EventParams) => {
+    if (params.sourceIndex != undefined && params.sourceIndex >= 0)
     await context.rechargeArtifact(params.sourceIndex, 1);
   }
 }

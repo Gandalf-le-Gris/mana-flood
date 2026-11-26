@@ -26,6 +26,8 @@ import type { Spell } from '@/types/spells/Spell.ts';
 import { buildSpell } from '@/types/spells/spells.ts';
 import { computed, inject } from 'vue';
 import SpellPortrait from './SpellPortrait.vue';
+import { GameUtils } from '@/utils/GameUtils.ts';
+import { EffectTrigger } from '@/types/effects/EffectTrigger.ts';
 
 const game: Game = useGameStore().current!;
 const battleContext = inject<BattleContext | null>('battleContext', null);
@@ -36,6 +38,7 @@ function canActivate(index: number): boolean {
   if (!battleContext || !battleContext.canAct()) return false;
   const spell = spells.value[index];
   if (!spell?.activatedAbility) return false;
+  if (GameUtils.countEffectActive(game, 'enemy.spell-lock')) return false;
   return spell?.activatedAbility.condition(game, { sourceIndex: index });
 }
 
@@ -47,10 +50,8 @@ async function activateSpell(index: number) {
   battleContext.setBusy(true);
   try {
     game.spells[index] = null;
-    const success = await spell.activatedAbility.execute(battleContext, { sourceIndex: index, sourceType: 'spell' });
-    if (!success) {
-      game.spells[index] = spell.name;
-    }
+    await spell.activatedAbility.execute(battleContext, { sourceIndex: index, sourceType: 'spell' });
+    await GameUtils.broadcastEvent(battleContext, EffectTrigger.SPELL, {});
   } finally {
     battleContext.setBusy(false);
   }

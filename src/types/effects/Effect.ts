@@ -3,6 +3,7 @@ import type { BattleContext } from '../BattleContext';
 import type { ExtendedColor } from '../Color';
 import type { Game } from '../Game';
 import { EffectTrigger } from './EffectTrigger';
+import type { EventParams } from '@/utils/GameUtils';
 
 export class Effect {
   id: string = "";
@@ -12,7 +13,7 @@ export class Effect {
   orbRateModifier?: Partial<Record<ExtendedColor, number>>;
   affinityModifier?: Partial<Record<ExtendedColor, [number, number, number]>>;
   matchEffect?: (context: BattleContext, match: MatchGroup) => Promise<void> | void;
-  effect?: (context: BattleContext, params?: { sourceIndex: number }) => Promise<void> | void;
+  effect?: (context: BattleContext, params: EventParams) => Promise<void> | void;
 
   withId(id: string): Effect {
     this.id = id;
