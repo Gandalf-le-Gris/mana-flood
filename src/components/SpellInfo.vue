@@ -11,7 +11,7 @@
           :class="{ 'can-activate': canActivate(index)}"
           @click="activateSpell(index)"
         >
-          <spell-portrait :spell />
+          <spell-portrait :spell :is-ready="canActivate(index)" />
         </div>
       </div>
     </div>

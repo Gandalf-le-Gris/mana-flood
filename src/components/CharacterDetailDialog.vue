@@ -22,7 +22,7 @@
           />
           <div class="d-flex px-16 mt-4 mb-n4 justify-space-around">
             <h1 class="d-flex my-0">
-              {{ enemy ? damage : character.damageModifier * 100 }}
+              {{ enemy ? damage : Math.round(character.damageModifier * 100) }}
               <v-icon
                 icon="mdi-sword"
                 size="xs"
@@ -31,7 +31,7 @@
               />
             </h1>
             <h1 class="d-flex my-0">
-              {{ enemy ? character.hp : character.hpModifier * 100 }}
+              {{ enemy ? character.hp : Math.round(character.hpModifier * 100) }}
               <v-icon
                 icon="mdi-heart"
                 size="xs"

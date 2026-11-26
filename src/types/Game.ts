@@ -23,5 +23,7 @@ export class Game {
   currentEnemies: string[] = [];
   shopContent: ShopContent = {};
 
+  killedEnemies: string[] = [];
+
   hp = 0;
 }

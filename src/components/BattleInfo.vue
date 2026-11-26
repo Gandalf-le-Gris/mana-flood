@@ -83,7 +83,8 @@ async function dealDamageToEnemy(damage: number, color: ExtendedColor, targetInd
         if (i !== -1) {
           priorities.value.splice(i, 1);
         }
-        game.currentEnemies.splice(game.currentEnemies.indexOf(enemies.value[target].name), 1);
+        const [name] = game.currentEnemies.splice(game.currentEnemies.indexOf(enemies.value[target].name), 1);
+        game.killedEnemies.push(name);
         checkEnemiesStatus();
       }
     }

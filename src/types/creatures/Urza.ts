@@ -13,12 +13,12 @@ export class Urza extends Creature {
   speed = 3;
 
   colorAffinity = {
-    W: 5,
-    U: 10,
+    W: 4,
+    U: 8,
     B: 3,
     R: 1,
     G: 1,
-    C: 10,
+    C: 8,
   };
 
   pool = {

@@ -5,6 +5,7 @@ import { CabalPaladin } from './CabalPaladin';
 import { CityscapeLeveler } from './CityscapeLeveler';
 import { CombatThresher } from './CombatThresher';
 import type { Creature } from "./Creature";
+import { Feldon } from './Feldon';
 import { ForgefireAutomaton } from './ForgefireAutomaton';
 import { GrizzlyBears } from './GrizzlyBears';
 import { HeavyweightDemolisher } from './HeavyweightDemolisher';
@@ -13,10 +14,13 @@ import { Karnstruct } from './Karnstruct';
 import { KnightOfNewBenalia } from './KnightOfNewBenalia';
 import { LlanowarElves } from "./LlanowarElves";
 import { Loran } from './Loran';
+import { Mishra } from './Mishra';
 import { PerennialBehemoth } from './PerennialBehemoth';
 import { ProdigalSorcerer } from './ProdigalSorcerer';
 import { SkirkProspector } from "./SkirkProspector";
 import { SpotterThopter } from './SpotterThopter';
+import { Titania } from './Titania';
+import { Tormod } from './Tormod';
 import { UniversalAutomaton } from './UniversalAutomaton';
 import { Urza } from './Urza';
 import { Venser } from './Venser';
@@ -47,6 +51,10 @@ export const creatures: typeof Creature[] = [
   UniversalAutomaton,
   Loran,
   Venser,
+  Tormod,
+  Feldon,
+  Titania,
+  Mishra,
 ];
 
 export function buildCreature(creature: string | Creature): Creature {

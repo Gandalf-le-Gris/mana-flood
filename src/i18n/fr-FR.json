@@ -48,7 +48,11 @@
       "perennial-behemoth": "Béhémoth vivace",
       "universal-automaton": "Automate universel",
       "loran": "Loran",
-      "venser": "Venser"
+      "venser": "Venser",
+      "tormod": "Tormod",
+      "feldon": "Feldonn",
+      "titania": "Titania",
+      "mishra": "Mishra"
     }
   },
   "artifacts": {
@@ -61,7 +65,14 @@
       "charcoal-diamond": "Diamant du charbon",
       "fire-diamond": "Diamant du feu",
       "moss-diamond": "Diamant de la mousse",
-      "powerstone-shard": "Éclat de lithoforce"
+      "powerstone-shard": "Éclat de lithoforce",
+      "sol-ring": "Anneau solaire",
+      "thran-dynamo": "Dynamo thran",
+      "worn-powerstone": "Lithoforce usée",
+      "gilded-lotus": "Lotus doré",
+      "urza-s-sylex": "Sylex d'Urza",
+      "the-mightstone-and-weakstone": "La Lithopuissance et la Lithorpeur",
+      "goblin-firebomb": "Bombe incendiaire gobeline"
     }
   },
   "enchantments": {
@@ -250,7 +261,8 @@
     "enemy": {
       "artifact-lock": "Les capacités des artefacts ne peuvent pas être activées.",
       "spell-lock": "Les sorts ne peuvent pas être lancés.",
-      "battle-start-artifact-delay": "Augmente le temps de recharge de tous les artefacts de 3 tours au début du combat."
+      "battle-start-artifact-delay": "Augmente le temps de recharge de tous les artefacts de 3 tours au début du combat.",
+      "turn-end-decay": "À la fin de chaque tour, vous perdez 10% de vos PV actuels."
     },
     "team": {
       "artifact-recharge": "Lorsqu'au moins 5 orbes incolores sont associés, réduit le temps de recharge d'un artefact aléatoire de 1 tour.",
@@ -265,7 +277,8 @@
       "destruction-destruction": "Quand au moins 10 orbes sont détruits, en détruit 4 de plus.",
       "destruction-conversion": "Quand au moins 10 orbes sont détruits en évitant une couleur, convertit 3 orbes en cette couleur.",
       "spell-creature-recharge": "Quand un sort est lancé, réduit le temps de recharge d'une créature aléatoire de 3 tours.",
-      "spell-artifact-recharge": "Quand un sort est lancé, réduit le temps de recharge d'un artefact aléatoire de 3 tours."
+      "spell-artifact-recharge": "Quand un sort est lancé, réduit le temps de recharge d'un artefact aléatoire de 3 tours.",
+      "artifact-cycling": "À la fin du combat, 50% de chances de perdre l'artefact équipé et de recharger entièrement sa propre compétence."
     }
   },
   "abilities": {
@@ -334,7 +347,11 @@
       "major-sacrifice-damage": "Frappe désespérée",
       "minor-artifact-recharge": "Recharge mineure",
       "artifact-recharge": "Recharge",
-      "major-artifact-recharge": "Recharge majeure"
+      "major-artifact-recharge": "Recharge majeure",
+      "reanimate": "Réanimation",
+      "annihilate": "Annihilation",
+      "detonate": "Détonation",
+      "cataclysm": "Cataclysme"
     },
     "description": {
       "minor-convert-white": "Convertit 3 orbes aléatoires en orbes blancs.",
@@ -401,7 +418,11 @@
       "major-sacrifice-damage": "Inflige 300 dégâts au prix de 100 PV.",
       "minor-artifact-recharge": "Réduit de 1 tour le temps de recharge de l'artefact équipé.",
       "artifact-recharge": "Réduit de 1 tour le temps de recharge de l'artefact équipé.",
-      "major-artifact-recharge": "Réduit de 1 tour le temps de recharge de l'artefact équipé."
+      "major-artifact-recharge": "Réduit de 1 tour le temps de recharge de l'artefact équipé.",
+      "reanimate": "Remplace la créature de la colonne de gauche par le dernier ennemi tué qui ne possède pas cette compétence.",
+      "annihilate": "Détruit tous les orbes.",
+      "detonate": "Se détruit pour détruire tous les orbes.",
+      "cataclysm": "Se détruit pour détruire tous les orbes et infliger 1000 dégâts à tous les ennemis."
     }
   },
   "results": {

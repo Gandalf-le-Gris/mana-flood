@@ -101,6 +101,37 @@ const frameColor = computed(() => {
   }
 });
 
+const haloColor1 = computed(() => {
+  if (!props.character) {
+    return 'rgb(var(--v-theme-C))';
+  }
+  switch (props.character.colors.length) {
+    case 0:
+      return 'rgb(var(--v-theme-C))';
+    case 1:
+    case 2:
+      return `rgb(var(--v-theme-${props.character.colors[0]}))`;
+    default:
+      return 'rgb(var(--v-theme-WUBRG))';
+  }
+});
+
+const haloColor2 = computed(() => {
+  if (!props.character) {
+    return 'rgb(var(--v-theme-C))';
+  }
+  switch (props.character.colors.length) {
+    case 0:
+      return 'rgb(var(--v-theme-C))';
+    case 1:
+      return `rgb(var(--v-theme-${props.character.colors[0]}))`;
+    case 2:
+      return `rgb(var(--v-theme-${props.character.colors[1]}))`;
+    default:
+      return 'rgb(var(--v-theme-WUBRG))';
+  }
+});
+
 const isOnCooldown = computed(() => (props.cooldown ?? 0) > 0);
 
 const ready = computed(() => props.isReady === true);
@@ -150,7 +181,7 @@ defineExpose({
   transition: filter 0.3s ease, transform 0.2s ease;
 
   &.has-halo {
-    animation: halo-pulse 2.2s infinite ease-in-out;
+    animation: halo-pulse 4.4s infinite ease-in-out;
   }
 
   &.on-cooldown {
@@ -213,10 +244,16 @@ defineExpose({
 
 @keyframes halo-pulse {
   0%, 100% {
-    filter: drop-shadow(0 0 4px v-bind('frameColor')) drop-shadow(0 0 8px v-bind('frameColor'));
+    filter: drop-shadow(0 0 4px v-bind('haloColor1')) drop-shadow(0 0 8px v-bind('haloColor1'));
+  }
+  25% {
+    filter: drop-shadow(0 0 8px v-bind('haloColor1')) drop-shadow(0 0 16px rgba(255, 255, 255, 0.8));
   }
   50% {
-    filter: drop-shadow(0 0 8px v-bind('frameColor')) drop-shadow(0 0 16px rgba(255, 255, 255, 0.8));
+    filter: drop-shadow(0 0 4px v-bind('haloColor2')) drop-shadow(0 0 8px v-bind('haloColor2'));
+  }
+  75% {
+    filter: drop-shadow(0 0 8px v-bind('haloColor2')) drop-shadow(0 0 16px rgba(255, 255, 255, 0.8));
   }
 }
 
